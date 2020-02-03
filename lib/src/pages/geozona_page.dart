@@ -62,15 +62,19 @@ class _GeozonaState extends State<Geozona> {
        mapController: map,
       options: MapOptions(
         center: LatLng(-11.991778, -77.058833),
-        zoom: 15
+        zoom: 15.0,
+        maxZoom: 17.0,
+        minZoom: 5.0
+    
       ),
       layers: [
-        _cargarMapa(),
+        _cargarTemplate(),
         _crearMarcadores(),
+        _crearGeozonas()
       ],
   );
   }
-  TileLayerOptions _cargarMapa (){
+  TileLayerOptions _cargarTemplate(){
     return TileLayerOptions(
       urlTemplate: 'https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga',
       subdomains: ['a','b','c']
@@ -100,7 +104,7 @@ class _GeozonaState extends State<Geozona> {
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) {
           getPosition = position;
-          map.move(LatLng(getPosition.latitude,getPosition.longitude), 18);
+          map.move(LatLng(getPosition.latitude,getPosition.longitude), 18);//
           setState(() {});
         print(position);
         }).catchError((e) {
@@ -125,6 +129,41 @@ class _GeozonaState extends State<Geozona> {
           hoverColor: help.white,
           textColor: help.blue,
           child: new Text('Siguiente -->'),
+    );
+  }
+
+  _crearGeozonas() {
+    return CircleLayerOptions(
+      circles: [
+        CircleMarker(
+          point: LatLng(getPosition.latitude,getPosition.longitude),
+          radius: 50.0,
+          color: Color.fromRGBO(0, 0, 0, 0.2),
+          borderColor: Colors.black12,
+          borderStrokeWidth: 5.0
+        ),
+        CircleMarker(
+          point: LatLng(-12.095845, -77.059635),
+          radius: 50.0,
+          color: Color.fromRGBO(0, 0, 0, 0.2),
+          borderColor: Colors.black12,
+          borderStrokeWidth: 5.0
+        ),
+        CircleMarker(
+          point: LatLng(-12.094481, -77.059463),
+          radius: 50.0,
+          color: Color.fromRGBO(0, 0, 0, 0.2),
+          borderColor: Colors.black12,
+          borderStrokeWidth: 5.0
+        ),
+        CircleMarker(
+          point: LatLng(-12.094691, -77.059656),
+          radius: 100.0,
+          color: Color.fromRGBO(0, 0, 0, 0.2),
+          borderColor: Colors.black12,
+          borderStrokeWidth: 5.0
+        ),
+      ]
     );
   }
   
