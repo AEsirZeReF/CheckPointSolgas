@@ -25,6 +25,15 @@ class _ScannerPageState extends State<ScannerPage> {
       body: Center(
         child: _cargarColumna(),
       ),
+      floatingActionButton: FlatButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/gallery');
+          },
+          color: help.white,
+          child: Text(
+            'Siguiente',
+            style: TextStyle(color: help.blue),
+          )),
     );
   }
 

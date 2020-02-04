@@ -10,7 +10,7 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  List<String> _cadenaImagenes = new List(5);
+  List<String> _cadenaImagenes = new List();
   var _picture;
   //List<dynamic> _listaImagenes = new List<dynamic>();
   @override
@@ -39,6 +39,7 @@ class _GalleryPageState extends State<GalleryPage> {
 
   _capturarImagem(BuildContext context) async {
     _picture = await ImagePicker.pickImage(source: ImageSource.camera);
+
     setState(() => _cadenaImagenes.add(_picture.path));
     Navigator.of(context).pop();
   }
@@ -70,12 +71,12 @@ class _GalleryPageState extends State<GalleryPage> {
 
   Widget _listaImagenes() {
     return ListView.builder(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       itemCount: _cadenaImagenes.length,
       itemBuilder: (BuildContext context, int index) {
         String url = _cadenaImagenes[index];
         return FadeInImage(
-            placeholder: AssetImage('assets/images/Ripple.gif'),
+            placeholder: AssetImage('assets/images/.gif'),
             image: AssetImage(url));
       },
     );
@@ -87,14 +88,4 @@ class _GalleryPageState extends State<GalleryPage> {
           'https://i.pinimg.com/originals/90/80/60/9080607321ab98fa3e70dd24b2513a20.gif'),
     );
   }
-
-  /*List<dynamic> listaImages() {
-    for (var item in _cadenaImagenes) {
-      setState(() {
-        var child = Image.asset(item);
-        _listaImagenes.add(child);
-      });
-    }
-    return _listaImagenes;
-  }*/
 }

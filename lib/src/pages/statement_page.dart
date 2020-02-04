@@ -11,6 +11,7 @@ class Statement extends StatelessWidget {
           title: help.tituloImagen,
           backgroundColor: help.blue,
           centerTitle: true,
+          automaticallyImplyLeading: false,
         ),
         backgroundColor: help.blue,
         body: Center(
@@ -53,7 +54,7 @@ class Statement extends StatelessWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: RaisedButton(
           onPressed: () {
-            Navigator.pushNamed(context, '/gallery');
+            Navigator.pushNamed(context, '/geozona');
           },
           color: help.white,
           textColor: help.blue,

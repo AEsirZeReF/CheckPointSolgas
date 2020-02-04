@@ -10,15 +10,13 @@ class LoadPage extends StatefulWidget {
 
 class _LoadPageState extends State<LoadPage> {
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-    Future.delayed(
-      Duration(seconds: 3),
-      (){
-        Navigator.pushNamed(context, '/statement');
-      }
-    );
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushNamed(context, '/statement');
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +24,7 @@ class _LoadPageState extends State<LoadPage> {
       body: Center(
         child: help.imageSolGas(80),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      /* floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: RaisedButton(
         onPressed: (){
           Navigator.pushNamed(context, '/statement');
@@ -35,10 +33,7 @@ class _LoadPageState extends State<LoadPage> {
         color: help.white,
         textColor: help.blue,
         child: Text('Acceder'),
-      )
+      )*/
     );
   }
 }
-
-
-
