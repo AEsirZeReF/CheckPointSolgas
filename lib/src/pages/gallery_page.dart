@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:checkpoint/src/utils/help.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:responsive/responsive.dart';
 
 class GalleryPage extends StatefulWidget {
   GalleryPage({Key key}) : super(key: key);
@@ -10,38 +13,49 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  List<String> _cadenaImagenes = new List();
-  var _picture;
-  //List<dynamic> _listaImagenes = new List<dynamic>();
+  //List<String> _cadenaImagenes = new List();
+
+  File _file; //List<dynamic> _listaImagenes = new List<dynamic>();
+  List<File> _listFile = new List();
+  double size;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: help.tituloImagen,
-        centerTitle: true,
-        backgroundColor: help.blue,
-      ),
-      backgroundColor: help.blue,
-      body: _picture == null ? _noImagen() : _listaImagenes(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FlatButton(
-        color: Colors.white,
-        onPressed: () {
-          _mensajeSeleccionImagen(context);
-        },
-        child: Text(
-          'Seleccionar Imagen',
-          style: TextStyle(color: Colors.blue),
+        appBar: AppBar(
+          title: help.tituloImagen,
+          centerTitle: true,
+          backgroundColor: help.blue,
         ),
-      ),
-    );
+        backgroundColor: help.blue,
+        body: _file == null ? _noImagen() : _listaImagenes(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _mensajeSeleccionImagen(context);
+            //_capturarImagem(context);
+          },
+          elevation: 9,
+          child: Icon(Icons.camera_alt),
+          tooltip: 'Tomar fotos',
+        ));
   }
 
+//_mensajeSeleccionImagen(context);
   _capturarImagem(BuildContext context) async {
-    _picture = await ImagePicker.pickImage(source: ImageSource.camera);
+    try {
+      var _picture = await ImagePicker.pickImage(source: ImageSource.camera);
 
-    setState(() => _cadenaImagenes.add(_picture.path));
-    Navigator.of(context).pop();
+      setState(() {
+        _file = _picture;
+        if (_file != null) _listFile.add(_file);
+      });
+      Navigator.of(context).pop();
+    } on PlatformException {
+      print('Error');
+    } catch (e) {
+      print('El error es :$e');
+    }
   }
 
   Future _mensajeSeleccionImagen(BuildContext context) {
@@ -57,7 +71,10 @@ class _GalleryPageState extends State<GalleryPage> {
                     height: 25.0,
                   ),
                   GestureDetector(
-                    child: Text('Camara'),
+                    child: Text(
+                      'Camara',
+                      style: TextStyle(fontSize: 18),
+                    ),
                     onTap: () {
                       _capturarImagem(context);
                     },
@@ -70,22 +87,55 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Widget _listaImagenes() {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: _cadenaImagenes.length,
-      itemBuilder: (BuildContext context, int index) {
-        String url = _cadenaImagenes[index];
-        return FadeInImage(
-            placeholder: AssetImage('assets/images/.gif'),
-            image: AssetImage(url));
-      },
-    );
+    final orientation = MediaQuery.of(context).orientation;
+    return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+        itemCount: _listFile.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3),
+        itemBuilder: (BuildContext context, int index) {
+          return Card(
+              child: ClipRRect(
+            borderRadius: BorderRadius.circular(4.5),
+            child: Image.file(
+              _listFile[index],
+              fit: BoxFit.cover,
+            ),
+          ));
+        });
   }
 
   Widget _noImagen() {
-    return Container(
-      child: Image.network(
-          'https://i.pinimg.com/originals/90/80/60/9080607321ab98fa3e70dd24b2513a20.gif'),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Capture 5 images',
+            style: help.subtitle,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          ResponsiveRow(
+            columnsCount: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: <Widget>[
+              FlexWidget(
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 60.0),
+                  child: Image.asset(
+                    'assets/images/hand.png',
+                  ),
+                ),
+                xs: 8,
+                xsOffset: 1,
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
