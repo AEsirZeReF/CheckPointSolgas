@@ -26,19 +26,31 @@ class _GalleryPageState extends State<GalleryPage> {
           title: help.tituloImagen,
           centerTitle: true,
           backgroundColor: help.blue,
+          automaticallyImplyLeading: false,
         ),
         backgroundColor: help.blue,
         body: _file == null ? _noImagen() : _listaImagenes(),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _mensajeSeleccionImagen(context);
-            //_capturarImagem(context);
-          },
-          elevation: 9,
-          child: Icon(Icons.camera_alt),
-          tooltip: 'Tomar fotos',
-        ));
+        floatingActionButton:
+            _listFile.length == 5 ? _botonSiguiente() : _botonCaptura());
+  }
+
+  Widget _botonCaptura() {
+    return FloatingActionButton(
+      onPressed: () {
+        _mensajeSeleccionImagen(context);
+        //_capturarImagem(context);
+      },
+      child: Icon(Icons.camera_alt),
+      tooltip: 'Tomar fotos',
+    );
+  }
+
+  Widget _botonSiguiente() {
+    return FloatingActionButton(
+      onPressed: () {},
+      child: Icon(Icons.check),
+    );
   }
 
 //_mensajeSeleccionImagen(context);

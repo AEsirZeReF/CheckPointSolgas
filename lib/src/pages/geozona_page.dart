@@ -1,6 +1,7 @@
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 //
 //import 'package:geolocator/geolocator.dart';
@@ -14,11 +15,16 @@ class Geozona extends StatefulWidget {
 }
 
 class _GeozonaState extends State<Geozona> {
-  /*Position getPosition =
-      new Position(latitude: -11.991778, longitude: -77.058833);*/
+  Position getPosition = new Position();
   MapController map = new MapController();
   double _latitud;
   double _longitud;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +32,15 @@ class _GeozonaState extends State<Geozona> {
         ModalRoute.of(context).settings.arguments as Map<String, double>;
 
     if (args['latitud'] == null && args['longitud'] == null) {
-      _latitud = -11.991778;
-      _longitud = -77.058833;
+      _latitud =
+          getPosition.latitude == null ? -12.050867 : getPosition.latitude;
+      _longitud =
+          getPosition.longitude == null ? -77.029999 : getPosition.longitude;
     } else {
       _latitud = args['latitud'];
       _longitud = args['longitud'];
     }
+
     print(_latitud);
     return Scaffold(
         appBar: AppBar(
@@ -70,9 +79,14 @@ class _GeozonaState extends State<Geozona> {
         height: 10,
       ),
       Container(
+        decoration:
+            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
         width: 380.0,
         height: 380.0,
-        child: _crearMapa(),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: _crearMapa(),
+        ),
       ),
       SizedBox(
         height: 40,
@@ -87,11 +101,11 @@ class _GeozonaState extends State<Geozona> {
           center: LatLng(_latitud, _longitud), //posicion del mapa
           zoom: 15.0,
           maxZoom: 17.0,
-          minZoom: 5.0),
+          minZoom: 10.0),
       layers: [
         _cargarTemplate(),
         _crearMarcadores(),
-        _crearGeozonas(),
+        //_crearGeozonas(),
         _crearPoligonos()
       ],
     );
@@ -122,21 +136,23 @@ class _GeozonaState extends State<Geozona> {
           }),
     ]);
   }
-  /*_getLocation() {
-          final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-          geolocator
-              .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-              .then((Position position) {
-            getPosition = position;
-            map.move(LatLng(getPosition.latitude, getPosition.longitude), 18); //
-            setState(() {});
-            print(position);
-          }).catchError((e) {
-            print(e);
-          });
-        }*/
 
-  _crearGeozonas() {
+  _getLocation() {
+    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      //
+      setState(() {
+        getPosition = position;
+        map.move(LatLng(getPosition.latitude, getPosition.longitude), 17);
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  /*_crearGeozonas() {
     return CircleLayerOptions(circles: [
       CircleMarker(
           point: LatLng(_latitud, _longitud),
@@ -145,7 +161,7 @@ class _GeozonaState extends State<Geozona> {
           borderColor: Colors.black12,
           borderStrokeWidth: 5.0),
     ]);
-  }
+  }*/
 
   _crearPoligonos() {
     return PolygonLayerOptions(polygons: <Polygon>[

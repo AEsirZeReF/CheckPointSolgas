@@ -29,6 +29,8 @@ class _ScannerPageState extends State<ScannerPage> {
       body: Center(
         child: _cargarColumna(),
       ),
+      floatingActionButton:
+          help.botonSiguiente(context, '/gallery', 'Siguiente'),
       /* floatingActionButton:
           help.botonSiguiente(context, '/gallery', 'Siguiente'),*/
     );
