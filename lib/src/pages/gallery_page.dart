@@ -1,3 +1,144 @@
+import 'dart:io';
+//import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:checkpoint/src/utils/help.dart';
+//import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:responsive/responsive.dart';
+
+class GalleryPage extends StatefulWidget {
+  GalleryPage({Key key}) : super(key: key);
+
+  @override
+  _GalleryPageState createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  File _image;
+  //animacion de contenedor
+  bool content_1 = false;
+  String drop = 'Opciones';
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxWidth: 600, maxHeight: 1000);
+    print(image.path);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  /*Future _save() async {
+    List<int> lista = new List<int>();
+    await _image.writeAsBytes(lista);
+    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(lista));
+    print(result);
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: help.tituloImagen,
+        centerTitle: true,
+        backgroundColor: help.blue,
+      ),
+      backgroundColor: help.blue,
+      body: Center(
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          scrollDirection: Axis.vertical,
+          children: <Widget>[
+            ResponsiveRow(
+              columnsCount: 12,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: <Widget>[
+                FlexWidget(
+                  child: Card(
+                      child: ListBody(
+                    children: <Widget>[
+                      ListTile(
+                        title: Text(
+                          '1ra Foto: Extintor',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.lightBlue),
+                        ),
+                        trailing: _dropdown(),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            content_1 = !content_1;
+                          });
+                        },
+                        child: AnimatedContainer(
+                          duration: Duration(seconds: 1),
+                          height: content_1 ? 350 : 150,
+                          curve: Curves.fastOutSlowIn,
+                          color: Colors.white,
+                          child: FadeInImage(
+                              fit: BoxFit.cover,
+                              height: content_1 ? 350 : 150,
+                              placeholder:
+                                  AssetImage('assets/images/BeanEater.gif'),
+                              image: _image == null
+                                  ? AssetImage('assets/images/img1.jpg')
+                                  : FileImage(_image)),
+                        ),
+                      ),
+                      ListTile(
+                          title: Text(
+                            'Tomar la foto a una buena distancia',
+                            style: TextStyle(color: Colors.lightBlue),
+                          ),
+                          subtitle: Text('Precionar la imagen par expandirla.'),
+                          trailing: GestureDetector(
+                            onTap: () {
+                              getImage();
+                            },
+                            child: Icon(
+                              Icons.camera_alt,
+                              size: 40,
+                              color: Colors.lightBlue,
+                            ),
+                          ))
+                    ],
+                  )),
+                  xs: 12,
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _dropdown() {
+    return GestureDetector(
+      child: DropdownButton(
+          value: drop,
+          elevation: 12,
+          iconEnabledColor: Colors.lightBlue,
+          items: <String>['Opciones', 'Editar', 'Eliminar'].map((value) {
+            return DropdownMenuItem(
+              child: Text(
+                value,
+                style: TextStyle(color: Colors.lightBlue),
+              ),
+              value: value,
+            );
+          }).toList(),
+          onChanged: (newvalue) {
+            setState(() {
+              drop = newvalue;
+            });
+          }),
+    );
+  }
+}
+
 /*import 'package:flutter/material.dart';
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/services.dart';
