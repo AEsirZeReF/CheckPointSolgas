@@ -1,9 +1,15 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:responsive/responsive.dart';
+import 'package:path/path.dart' as path;
+import 'package:path/path.dart';
+import 'package:image_save/image_save.dart';
+import 'dart:typed_data';
+//import 'package:image/image.dart' as I;
 
 class GalleryPage extends StatefulWidget {
   GalleryPage({Key key}) : super(key: key);
@@ -13,29 +19,211 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  //List<String> _cadenaImagenes = new List();
+  String directory;
+  String pathImagenes;
+  //String _ruta;
+  File picture;
 
-  File _file; //List<dynamic> _listaImagenes = new List<dynamic>();
-  List<File> _listFile = new List();
-  double size;
+  @override
+  void initState() {
+    super.initState();
+    _direccion();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: help.tituloImagen,
-          centerTitle: true,
-          backgroundColor: help.blue,
-          automaticallyImplyLeading: false,
-        ),
+      appBar: AppBar(
+        title: help.tituloImagen,
+        centerTitle: true,
         backgroundColor: help.blue,
-        body: _file == null ? _noImagen() : _listaImagenes(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton:
-            _listFile.length == 5 ? _botonSiguiente() : _botonCaptura());
+        automaticallyImplyLeading: false,
+      ),
+      backgroundColor: help.blue,
+      body: _noImagen(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      /*floatingActionButton:
+            _listFile.length == 5 ? _botonSiguiente() : _botonCaptura()*/
+    );
   }
 
-  Widget _botonCaptura() {
+  _capturarImagem() async {
+    String ruta;
+    try {
+      var _picture = await ImagePicker.pickImage(source: ImageSource.camera);
+      setState(() {
+        picture = _picture;
+      });
+      String rutaImagen = path.basename(_picture.path);
+      //_picture.copy('$directory/$rutaImagen');
+      List<int> listaimg = new List<int>();
+      await _picture.writeAsBytes(listaimg);
+      pathImagenes = join(directory, rutaImagen);
+      ruta = await ImageSave.saveImage("jpg", Uint8List.fromList(listaimg));
+      print(ruta);
+    } on PlatformException {
+      print('Error en la plataforma');
+    } catch (e) {
+      print('El error es :$e');
+    }
+  }
+
+  void _direccion() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    setState(() {
+      directory = documentsDirectory.path;
+    });
+  }
+
+  Widget _noImagen() {
+    return ListView(
+      scrollDirection: Axis.vertical,
+      children: <Widget>[
+        ResponsiveRow(
+          columnsCount: 12,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            _cardGallery1(),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _cardGallery1() {
+    return FlexWidget(
+      xs: 10,
+      xsOffset: 1,
+      child: Card(
+        child: ListBody(
+          children: <Widget>[
+            ListTile(
+                title: Text('1ra Foto: Extintor'),
+                subtitle: Text('Tome la foto a una distancia prudente.'),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 40,
+                  ),
+                  onTap: () {
+                    _capturarImagem();
+                  },
+                )),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: picture == null ? Text('Cargando') : Image.file(picture))
+          ],
+        ),
+      ),
+    );
+  }*/
+
+/*Widget _cardGallery2() {
+    return FlexWidget(
+      xs: 10,
+      xsOffset: 1,
+      child: Card(
+        child: ListBody(
+          children: <Widget>[
+            ListTile(
+                title: Text('2da Foto: Llantas posteriores'),
+                subtitle: Text('Tome la foto detalladamente.'),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 40,
+                  ),
+                  onTap: () {
+                    print('objectasss');
+                  },
+                )),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                onTap: () {
+                  print('object');
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }*/
+
+/*Widget _cardGallery3() {
+    return FlexWidget(
+      xs: 10,
+      xsOffset: 1,
+      child: Card(
+        child: ListBody(
+          children: <Widget>[
+            ListTile(
+                title: Text('3ra Foto: Llantas delanteras'),
+                subtitle: Text('Tome la foto detalladamente.'),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 40,
+                  ),
+                  onTap: () {
+                    print('objectasss');
+                  },
+                )),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                child: Image.network(
+                  'https://statics.memondo.com/p/99/crs/2017/10/CR_1054253_b49f715008494f1790ca39c3f2652d33_que_fue_antes_thumb_fb.jpg?cb=6914896',
+                ),
+                onTap: () {
+                  print('object');
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }*/
+
+/*Widget _cardGallery4() {
+    return FlexWidget(
+      xs: 10,
+      xsOffset: 1,
+      child: Card(
+        child: ListBody(
+          children: <Widget>[
+            ListTile(
+                title: Text('4ta Foto: Cabina del Conductor'),
+                subtitle: Text('Tome la foto detalladamente.'),
+                trailing: GestureDetector(
+                  child: Icon(
+                    Icons.camera_alt,
+                    size: 40,
+                  ),
+                  onTap: () {
+                    print('objectasss');
+                  },
+                )),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: GestureDetector(
+                child: Image.network(
+                  'https://smart-lighting.es/wp-content/uploads/2017/04/17C183_03-640x360.jpg',
+                ),
+                onTap: () {
+                  print('object');
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }*/
+
+/*Widget _botonCaptura() {
     return FloatingActionButton(
       onPressed: () {
         _mensajeSeleccionImagen(context);
@@ -44,23 +232,26 @@ class _GalleryPageState extends State<GalleryPage> {
       child: Icon(Icons.camera_alt),
       tooltip: 'Tomar fotos',
     );
-  }
+  }*/
 
-  Widget _botonSiguiente() {
+/*Widget _botonSiguiente() {
     return FloatingActionButton(
       onPressed: () {},
       child: Icon(Icons.check),
     );
-  }
+  }*/
 
 //_mensajeSeleccionImagen(context);
-  _capturarImagem(BuildContext context) async {
+/*_capturarImagem(BuildContext context) async {
     try {
       var _picture = await ImagePicker.pickImage(source: ImageSource.camera);
 
       setState(() {
         _file = _picture;
-        if (_file != null) _listFile.add(_file);
+        if (_file != null) {
+
+        //_listFile.add(_file);
+        }
       });
       Navigator.of(context).pop();
     } on PlatformException {
@@ -68,14 +259,13 @@ class _GalleryPageState extends State<GalleryPage> {
     } catch (e) {
       print('El error es :$e');
     }
-  }
-
-  Future _mensajeSeleccionImagen(BuildContext context) {
+  }*/
+/*Future _mensajeSeleccionImagen(BuildContext context) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Seleccione una opción:'),
+            title: Text('Seleccione una opción'),
             content: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
@@ -88,7 +278,7 @@ class _GalleryPageState extends State<GalleryPage> {
                       style: TextStyle(fontSize: 18),
                     ),
                     onTap: () {
-                      _capturarImagem(context);
+                      _capturarImagem(context, 1);
                     },
                   )
                 ],
@@ -96,9 +286,9 @@ class _GalleryPageState extends State<GalleryPage> {
             ),
           );
         });
-  }
+  }*/
 
-  Widget _listaImagenes() {
+/*Widget _listaImagenes() {
     final orientation = MediaQuery.of(context).orientation;
     return GridView.builder(
         padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
@@ -115,39 +305,4 @@ class _GalleryPageState extends State<GalleryPage> {
             ),
           ));
         });
-  }
-
-  Widget _noImagen() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Capture 5 images',
-            style: help.subtitle,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          ResponsiveRow(
-            columnsCount: 12,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: <Widget>[
-              FlexWidget(
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 60.0),
-                  child: Image.asset(
-                    'assets/images/hand.png',
-                  ),
-                ),
-                xs: 8,
-                xsOffset: 1,
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
+  }*/
