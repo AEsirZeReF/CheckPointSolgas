@@ -24,16 +24,6 @@ class _LoadPageState extends State<LoadPage> {
       body: Center(
         child: help.imageSolGas(80),
       ),
-      /* floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: RaisedButton(
-        onPressed: (){
-          Navigator.pushNamed(context, '/statement');
-        },
-        elevation: 20,
-        color: help.white,
-        textColor: help.blue,
-        child: Text('Acceder'),
-      )*/
     );
   }
 }

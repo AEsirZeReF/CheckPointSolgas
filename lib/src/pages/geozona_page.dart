@@ -40,8 +40,6 @@ class _GeozonaState extends State<Geozona> {
       _latitud = args['latitud'];
       _longitud = args['longitud'];
     }
-
-    print(_latitud);
     return Scaffold(
         appBar: AppBar(
           title: help.tituloImagen,

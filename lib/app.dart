@@ -1,5 +1,7 @@
+//import 'package:checkpoint/src/game/game.dart';
 import 'package:checkpoint/src/pages/gallery_page.dart';
 import 'package:checkpoint/src/pages/geozona_page.dart';
+import 'package:checkpoint/src/pages/game_page.dart';
 //import 'package:checkpoint/src/pages/image_save.dart';
 import 'package:checkpoint/src/pages/list_page.dart';
 import 'package:checkpoint/src/pages/load_page.dart';
@@ -26,7 +28,8 @@ class MyApp extends StatelessWidget {
         '/geozona': (context) => Geozona(),
         '/scanner': (content) => ScannerPage(),
         '/gallery': (context) => GalleryPage(),
-        '/list': (context) => ListPage()
+        '/list': (context) => ListPage(),
+        '/game': (context) => GamePage()
       },
     );
   }
