@@ -25,5 +25,5 @@ class _LoadPageState extends State<LoadPage> {
         child: help.imageSolGas(80),
       ),
     );
-  }
+  } //
 }
