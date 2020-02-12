@@ -58,6 +58,72 @@ class Help {
           side: BorderSide(width: 1.5, color: Colors.deepOrange)),
     );
   }
+
+  //diseño del fondo
+  Stack layoutFondo(BuildContext context, Widget newWidget) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          color: Color(0xFF2e4792),
+          //decoration: BoxDecoration(borderRadius: BorderRadius.only()),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.90,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(500)),
+                color: Color(0xFF19317a)),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.70,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(500)),
+                color: help.blue),
+          ),
+        ),
+        /*Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.50,
+            height: MediaQuery.of(context).size.height * 0.30,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(500)),
+                color: Color(0xFFff6a00)),
+          ),
+        ),*/
+        /*Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.40,
+            height: MediaQuery.of(context).size.height * 0.19,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(500)),
+                color: Color(0xFFff8b39)),
+          ),
+        ),*/
+        /* Align(
+          alignment: Alignment.topRight,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.30,
+            height: MediaQuery.of(context).size.height * 0.11,
+            decoration: BoxDecoration(
+                borderRadius:
+                    BorderRadius.only(bottomLeft: Radius.circular(500)),
+                color: Color(0xFFffa464)),
+          ),
+        ),*/
+        newWidget
+      ],
+    );
+  }
 }
 
 final Help help = new Help();

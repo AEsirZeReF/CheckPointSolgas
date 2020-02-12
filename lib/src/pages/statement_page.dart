@@ -12,6 +12,10 @@ class Statement extends StatefulWidget {
 class _StatementState extends State<Statement> {
   double latitud;
   double longitud;
+  bool acepto = false;
+  bool enviar = true;
+  String declaracion =
+      'Una declaración jurada es una manifestación escrita o verbal cuya veracidad es asegurada mediante un juramento ante una autoridad judicial o administrativa. Esto hace que el contenido de la declaración sea tomado como cierto hasta que se demuestre lo contrario.La institución de la declaración jurada ha sido establecida por diversos sistemas jurídicos, tanto de Common law como del Derecho continental, en gran parte para dar rapidez a ciertos trámites legales, sustituyendo transitoriamente a la presentación de documentos escritos o testimonios de terceros, mediante una presunción iuris tantum (que admite prueba en contrario).La importancia de la declaración jurada se halla en el hecho que permite abreviar procedimientos tanto ante autoridades judiciales como administrativas, y al mismo tiempo genera una responsabilidad legal para el declarante en caso que la declaración jurada resulte ser contraria a la verdad de los hechos que se acrediten posteriormente, equiparando la declaración jurada con un efectivo juramento o promesa de decir la verdad. Este último elemento puede tener consecuencias a nivel penal en los ordenamientos jurídicos que consideran al perjurio (o violación de juramento) como un delito, o en los países que imponen castigos penales o administrativos para quien formula cualquier declaración falsa ante ciertas autoridades.';
   @override
   void initState() {
     super.initState();
@@ -21,73 +25,121 @@ class _StatementState extends State<Statement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: help.tituloImagen,
-          backgroundColor: help.blue,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
+      appBar: AppBar(
+        title: help.tituloImagen,
         backgroundColor: help.blue,
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                child: Text(
-                  'Declaración Jurada',
-                  style: help.subtitle,
-                ),
-              ),
-              SizedBox(
-                height: help.contentSize(context)['heigth'] < 700 ? 10 : 50.0,
-              ),
-              Container(
-                  width: 320,
-                  height: help.contentSize(context)['heigth'] < 700 ? 300 : 350,
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
+      body: help.layoutFondo(
+          context,
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.085,
+                right: 20.0,
+                left: 20.0),
+            child: Container(
+                height: MediaQuery.of(context).size.height * 0.70,
+                width: MediaQuery.of(context).size.width,
+                child: Container(
+                  ///<<<<<<<<<<<<<<<<<<convert to card
+                  child: Column(
                     children: <Widget>[
-                      Text(
-                        'Al contrario del pensamiento popular, el texto de Lorem Ipsum no es simplemente texto aleatorio. Tiene sus raices en una pieza cl´sica de la literatura del Latin, que data del año 45 antes de Cristo, haciendo que este adquiera mas de 2000 años de antiguedad. Richard McClintock, un profesor de Latin de la Universidad de Hampden-Sydney en Virginia, encontró una de las palabras más oscuras de la lengua del latín, "consecteur", en un pasaje de Lorem Ipsum, y al seguir leyendo distintos textos del latín, descubrió la fuente indudable. Lorem Ipsum viene de las secciones 1.10.32 y 1.10.33 de "de Finnibus Bonorum et Malorum" (Los Extremos del Bien y El Mal) por Cicero, escrito en el año 45 antes de Cristo. Este libro es un tratado de teoría de éticas, muy popular durante el Renacimiento. La primera linea del Lorem Ipsum, "Lorem ipsum dolor sit amet..", viene de una linea en la sección 1.10.32',
-                        style: help.parrafo,
-                        textAlign: TextAlign.justify,
+                      Container(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: Center(
+                          child: Text(
+                            'Declaración Jurada',
+                            style: TextStyle(fontSize: 30, color: Colors.white),
+                          ),
+                        ),
                       ),
-                      Text(
-                        'Al contrario del pensamiento popular, el texto de Lorem Ipsum no es simplemente texto aleatorio. Tiene sus raices en una pieza cl´sica de la literatura del Latin, que data del año 45 antes de Cristo, haciendo que este adquiera mas de 2000 años de antiguedad. Richard McClintock, un profesor de Latin de la Universidad de Hampden-Sydney en Virginia, encontró una de las palabras más oscuras de la lengua del latín, "consecteur", en un pasaje de Lorem Ipsum, y al seguir leyendo distintos textos del latín, descubrió la fuente indudable. Lorem Ipsum viene de las secciones 1.10.32 y 1.10.33 de "de Finnibus Bonorum et Malorum" (Los Extremos del Bien y El Mal) por Cicero, escrito en el año 45 antes de Cristo. Este libro es un tratado de teoría de éticas, muy popular durante el Renacimiento. La primera linea del Lorem Ipsum, "Lorem ipsum dolor sit amet..", viene de una linea en la sección 1.10.32',
-                        style: help.parrafo,
-                        textAlign: TextAlign.justify,
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.80,
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Text(
+                            declaracion,
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            EdgeInsets.only(right: 20.0, left: 20.0, top: 20),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Checkbox(
+                                value: acepto,
+                                onChanged: (val) {
+                                  setState(() {
+                                    acepto = val;
+                                  });
+                                }),
+                            Text('Acepta todos los terminos y condiciones',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 20.0, left: 20.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Container(
+                              child: Checkbox(
+                                  value: enviar,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      enviar = val;
+                                    });
+                                  }),
+                            ),
+                            Text(
+                              'Se enviara toda la información',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin:
+                            EdgeInsets.only(right: 20.0, left: 20.0, top: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            RaisedButton(
+                              onPressed: () {
+                                if (enviar == true && acepto == true) {
+                                  Navigator.pushNamed(context, '/geozona',
+                                      arguments: <String, double>{
+                                        'latitud': latitud,
+                                        'longitud': longitud
+                                      });
+                                }
+                              },
+                              child: Text('Confirmar'),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                  side:
+                                      BorderSide(width: 2, color: Colors.blue)),
+                            )
+                          ],
+                        ),
                       )
                     ],
-                  )),
-              SizedBox(
-                height: 40,
-              )
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FlatButton.icon(
-          color: Colors.white,
-          onPressed: () {
-            Navigator.pushNamed(context, '/geozona',
-                arguments: <String, double>{
-                  'latitud': latitud,
-                  'longitud': longitud
-                });
-          },
-          icon: Icon(
-            Icons.check,
-            color: help.blue,
-          ),
-          label: Text(
-            'Siguiente',
-            style: TextStyle(color: help.blue, fontSize: 16),
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50.0),
-              side: BorderSide(width: 1.5, color: Colors.deepOrange)),
-        ));
+                  ),
+                )),
+          )),
+    );
   }
 
   Future _getLocation() async {
