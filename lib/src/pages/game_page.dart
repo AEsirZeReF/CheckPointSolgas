@@ -22,8 +22,8 @@ class GamePageState extends State<GamePage> {
   bool flip = false;
   Map<String, List<String>> _coleccionImagenes = {
     'imagen': [
-      '00.jpg',
-      '01.jpg',
+      '01.png',
+      '02.jpg',
       '03.jpg',
       '04.jpg',
       '05.jpg',
@@ -129,8 +129,9 @@ class GamePageState extends State<GamePage> {
                         margin: EdgeInsets.all(4.0),
                         //color: Colors.deepOrange,
                         decoration: BoxDecoration(
+                            border: Border.all(width: 2, color: Colors.white),
                             image: DecorationImage(
-                                image: AssetImage('assets/images/img1.jpg'),
+                                image: AssetImage('assets/images/gamecard.png'),
                                 fit: BoxFit.cover)),
                         //child: Image.asset('assets/images/img1.jpg'),
                       ),
@@ -146,8 +147,7 @@ class GamePageState extends State<GamePage> {
                         child: Center(
                           child: Text(
                             "${data[index]}",
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 100),
+                            style: TextStyle(color: Colors.white, fontSize: 10),
                           ),
                         ),
                       ),

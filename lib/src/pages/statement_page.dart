@@ -24,121 +24,127 @@ class _StatementState extends State<Statement> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: help.tituloImagen,
-        backgroundColor: help.blue,
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: help.layoutFondo(
-          context,
-          Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.085,
-                right: 20.0,
-                left: 20.0),
-            child: Container(
-                height: MediaQuery.of(context).size.height * 0.70,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  ///<<<<<<<<<<<<<<<<<<convert to card
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Center(
-                          child: Text(
-                            'Declaración Jurada',
-                            style: TextStyle(fontSize: 30, color: Colors.white),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          title: help.tituloImagen,
+          backgroundColor: help.blue,
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        body: help.layoutFondo(
+            context,
+            Container(
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.085,
+                  right: 20.0,
+                  left: 20.0),
+              child: Container(
+                  height: MediaQuery.of(context).size.height * 0.70,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    ///<<<<<<<<<<<<<<<<<<convert to card
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(bottom: 20),
+                          child: Center(
+                            child: Text(
+                              'Declaración Jurada',
+                              style:
+                                  TextStyle(fontSize: 30, color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.80,
-                        height: MediaQuery.of(context).size.height * 0.35,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: Text(
-                            declaracion,
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                            textAlign: TextAlign.justify,
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.80,
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Text(
+                              declaracion,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.only(right: 20.0, left: 20.0, top: 20),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Checkbox(
-                                value: acepto,
-                                onChanged: (val) {
-                                  setState(() {
-                                    acepto = val;
-                                  });
-                                }),
-                            Text('Acepta todos los terminos y condiciones',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 20.0, left: 20.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              child: Checkbox(
-                                  value: enviar,
+                        Container(
+                          margin:
+                              EdgeInsets.only(right: 20.0, left: 20.0, top: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Checkbox(
+                                  value: acepto,
                                   onChanged: (val) {
                                     setState(() {
-                                      enviar = val;
+                                      acepto = val;
                                     });
                                   }),
-                            ),
-                            Text(
-                              'Se enviara toda la información',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 13),
-                            ),
-                          ],
+                              Text('Acepta todos los terminos y condiciones',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15)),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin:
-                            EdgeInsets.only(right: 20.0, left: 20.0, top: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            RaisedButton(
-                              onPressed: () {
-                                if (enviar == true && acepto == true) {
-                                  Navigator.pushNamed(context, '/geozona',
-                                      arguments: <String, double>{
-                                        'latitud': latitud,
-                                        'longitud': longitud
+                        Container(
+                          margin: EdgeInsets.only(right: 20.0, left: 20.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                child: Checkbox(
+                                    value: enviar,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        enviar = val;
                                       });
-                                }
-                              },
-                              child: Text('Confirmar'),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                  side:
-                                      BorderSide(width: 2, color: Colors.blue)),
-                            )
-                          ],
+                                    }),
+                              ),
+                              Text(
+                                'Se enviara toda la información',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 13),
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                )),
-          )),
+                        Container(
+                          margin:
+                              EdgeInsets.only(right: 20.0, left: 20.0, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              RaisedButton(
+                                onPressed: () {
+                                  if (enviar == true && acepto == true) {
+                                    Navigator.pushNamed(context, '/geozona',
+                                        arguments: <String, double>{
+                                          'latitud': latitud,
+                                          'longitud': longitud
+                                        });
+                                  }
+                                },
+                                child: Text('Confirmar'),
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    side: BorderSide(
+                                        width: 2, color: Colors.blue)),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
+            )),
+      ),
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
+import 'package:android_intent/android_intent.dart';
 //
 //import 'package:geolocator/geolocator.dart';
 
@@ -23,6 +24,7 @@ class _GeozonaState extends State<Geozona> {
   @override
   void initState() {
     super.initState();
+    _checkGps();
     _getLocation();
   }
 
@@ -40,7 +42,9 @@ class _GeozonaState extends State<Geozona> {
       _latitud = args['latitud'];
       _longitud = args['longitud'];
     }
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
         appBar: AppBar(
           title: help.tituloImagen,
           backgroundColor: help.blue,
@@ -48,19 +52,70 @@ class _GeozonaState extends State<Geozona> {
           automaticallyImplyLeading: false,
         ),
         backgroundColor: help.blue,
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _crearListaContenido(),
+        body: help.layoutFondo(
+          context,
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.65,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20), color: Colors.white),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    title: Center(
+                        child: Text(
+                      'CHECKPOINT VIRTUAL',
+                      style: TextStyle(fontSize: 25, color: Colors.blue),
+                    )),
+                    subtitle: Center(
+                        child: Text('Mi posición actual',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ))),
+                  ),
+                  Divider(
+                    color: Colors.blue,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 7),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: _crearMapa(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton:
-            help.botonSiguiente(context, '/scanner', 'Siguiente'));
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: RaisedButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/scanner');
+            },
+            color: Colors.white,
+            child: Text(
+              'Siguiente',
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+                side: BorderSide(width: 2, color: Colors.lightBlue))),
+      ),
+    );
   }
 
-  List<Widget> _crearListaContenido() {
+  /* List<Widget> _crearListaContenido() {
     return <Widget>[
       Text(
         'CHECKPOINT VIRTUAL',
@@ -90,7 +145,7 @@ class _GeozonaState extends State<Geozona> {
         height: 40,
       )
     ];
-  }
+  }*/
 
   Widget _crearMapa() {
     return FlutterMap(
@@ -150,6 +205,33 @@ class _GeozonaState extends State<Geozona> {
     });
   }
 
+  Future _checkGps() async {
+    if (!(await Geolocator().isLocationServiceEnabled())) {
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("No se puede obtener la ubicación"),
+              content: const Text('Por favor active su GPS'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    final AndroidIntent intent = AndroidIntent(
+                        action: 'android.settings.LOCATION_SOURCE_SETTINGS');
+
+                    intent.launch();
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
   /*_crearGeozonas() {
     return CircleLayerOptions(circles: [
       CircleMarker(

@@ -22,7 +22,16 @@ class _LoadPageState extends State<LoadPage> {
     return Scaffold(
       backgroundColor: help.blue,
       body: Center(
-        child: help.imageSolGas(80),
+        child: help.layoutFondo(
+            context,
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                width: MediaQuery.of(context).size.width,
+                child: Image.asset('assets/images/logo.png'),
+              ),
+            )),
       ),
     );
   } //
