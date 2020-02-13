@@ -59,7 +59,7 @@ class _GeozonaState extends State<Geozona> {
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.65,
+              height: MediaQuery.of(context).size.height * 0.62,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20), color: Colors.white),
               child: Column(
@@ -114,38 +114,6 @@ class _GeozonaState extends State<Geozona> {
       ),
     );
   }
-
-  /* List<Widget> _crearListaContenido() {
-    return <Widget>[
-      Text(
-        'CHECKPOINT VIRTUAL',
-        style: help.subtitle,
-      ),
-      SizedBox(
-        height: 15,
-      ),
-      Text(
-        'GEOZONA',
-        style: help.estiloTexto,
-      ),
-      SizedBox(
-        height: 10,
-      ),
-      Container(
-        decoration:
-            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
-        width: 380.0,
-        height: 380.0,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: _crearMapa(),
-        ),
-      ),
-      SizedBox(
-        height: 40,
-      )
-    ];
-  }*/
 
   Widget _crearMapa() {
     return FlutterMap(

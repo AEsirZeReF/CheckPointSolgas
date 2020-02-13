@@ -26,9 +26,11 @@ class _ScannerPageState extends State<ScannerPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: help.blue,
-      body: Center(
-        child: _cargarColumna(),
-      ),
+      body: help.layoutFondo(
+          context,
+          Center(
+            child: _cargarColumna(),
+          )),
       floatingActionButton:
           help.botonSiguiente(context, '/gallery', 'Siguiente'),
       /* floatingActionButton:

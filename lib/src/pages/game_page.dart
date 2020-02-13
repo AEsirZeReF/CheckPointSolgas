@@ -75,91 +75,96 @@ class GamePageState extends State<GamePage> {
         backgroundColor: help.blue,
       ),
       backgroundColor: help.blue,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              /*Padding(
+      body: help.layoutFondo(
+          context,
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  /*Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
                   "$time",
                   style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
               ),*/
-              Theme(
-                data: ThemeData.dark(),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                    ),
-                    itemBuilder: (context, index) => FlipCard(
-                      key: cardStateKeys[index],
-                      onFlip: () {
-                        if (!flip) {
-                          flip = true;
-                          previousIndex = index;
-                        } else {
-                          flip = false;
-                          if (previousIndex != index) {
-                            if (data[previousIndex] != data[index]) {
-                              cardStateKeys[previousIndex]
-                                  .currentState
-                                  .toggleCard();
+                  Theme(
+                    data: ThemeData.dark(),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (context, index) => FlipCard(
+                          key: cardStateKeys[index],
+                          onFlip: () {
+                            if (!flip) {
+                              flip = true;
                               previousIndex = index;
                             } else {
-                              cardFlips[previousIndex] = false;
-                              cardFlips[index] = false;
-                              print(cardFlips);
+                              flip = false;
+                              if (previousIndex != index) {
+                                if (data[previousIndex] != data[index]) {
+                                  cardStateKeys[previousIndex]
+                                      .currentState
+                                      .toggleCard();
+                                  previousIndex = index;
+                                } else {
+                                  cardFlips[previousIndex] = false;
+                                  cardFlips[index] = false;
+                                  print(cardFlips);
 
-                              if (cardFlips.every((t) => t == false)) {
-                                print("Won");
-                                showResult();
+                                  if (cardFlips.every((t) => t == false)) {
+                                    print("Won");
+                                    showResult();
+                                  }
+                                }
                               }
                             }
-                          }
-                        }
-                      },
-                      direction: FlipDirection.HORIZONTAL,
-                      flipOnTouch: cardFlips[index],
-                      front: Container(
-                        margin: EdgeInsets.all(4.0),
-                        //color: Colors.deepOrange,
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 2, color: Colors.white),
-                            image: DecorationImage(
-                                image: AssetImage('assets/images/gamecard.png'),
-                                fit: BoxFit.cover)),
-                        //child: Image.asset('assets/images/img1.jpg'),
-                      ),
-                      back: Container(
-                        margin: EdgeInsets.all(4.0),
-                        //color: Color(0xFFd88231),
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                    'assets/images/${_coleccionImagenes['imagen'][int.parse(data[index])]}'))),
+                          },
+                          direction: FlipDirection.HORIZONTAL,
+                          flipOnTouch: cardFlips[index],
+                          front: Container(
+                            margin: EdgeInsets.all(4.0),
+                            //color: Colors.deepOrange,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 2, color: Colors.white),
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/gamecard.png'),
+                                    fit: BoxFit.cover)),
+                            //child: Image.asset('assets/images/img1.jpg'),
+                          ),
+                          back: Container(
+                            margin: EdgeInsets.all(4.0),
+                            //color: Color(0xFFd88231),
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                        'assets/images/${_coleccionImagenes['imagen'][int.parse(data[index])]}'))),
 
-                        child: Center(
-                          child: Text(
-                            "${data[index]}",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                            child: Center(
+                              child: Text(
+                                "${data[index]}",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ),
+                            ),
                           ),
                         ),
+                        itemCount: data.length,
                       ),
                     ),
-                    itemCount: data.length,
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          )),
     );
   }
 
