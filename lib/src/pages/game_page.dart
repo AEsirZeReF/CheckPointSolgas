@@ -1,14 +1,14 @@
+import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flip_card/flip_card.dart';
-import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
-int level = 8;
+int level = 12;
 
 class GamePage extends StatefulWidget {
   final int size;
-  const GamePage({Key key, this.size = 8}) : super(key: key);
+  const GamePage({Key key, this.size = 12}) : super(key: key);
 
   @override
   GamePageState createState() => GamePageState();
@@ -20,6 +20,7 @@ class GamePageState extends State<GamePage> {
   List<String> data = [];
   int previousIndex = -1;
   bool flip = false;
+  var args;
   Map<String, List<String>> _coleccionImagenes = {
     'imagen': [
       '01.png',
@@ -66,6 +67,8 @@ class GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    args = ModalRoute.of(context).settings.arguments
+        as Map<String, Map<String, dynamic>>;
     return Scaffold(
       appBar: AppBar(
         title: help.tituloImagen,
@@ -169,20 +172,24 @@ class GamePageState extends State<GamePage> {
   }
 
   showResult() {
-    level == 16
+    level == 12
         ? showDialog(
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
               title: Text("Usted completado el formulario Solgas"),
               content: Text(
-                "Time $time",
+                "tiempo $time",
                 style: Theme.of(context).textTheme.display2,
               ),
               actions: <Widget>[
                 FlatButton(
-                  onPressed: () {},
-                  child: Text("Finish"),
+                  onPressed: () {
+                    _postInformation();
+                    Navigator.pop(context);
+                    setState(() {});
+                  },
+                  child: Text("Enviar Datos"),
                 ),
               ],
             ),
@@ -213,5 +220,53 @@ class GamePageState extends State<GamePage> {
               ],
             ),
           );
+  }
+
+  _postInformation() async {
+    Dio dio = new Dio();
+    FormData formData = new FormData.fromMap({
+      'latitude': '${args['statement']['latitud']}',
+      'longitude': '${args['statement']['longitud']}',
+      'timestamp': 'Es tarde',
+      'game_score': '$time',
+      'unitid': 'placa',
+      'driverid': '12345678',
+      'image1': args['gallery']['img1'],
+      'image2': args['gallery']['img2'],
+      'image3': args['gallery']['img3'],
+      'image4': args['gallery']['img4'],
+      'image5': args['gallery']['img5']
+    });
+    try {
+      String urlJ = 'http://190.223.43.132:8000/upload/';
+      var url = urlJ;
+      var response = await dio.post(url, data: formData);
+      print('Response status ${response.statusCode}');
+      print('Response message ${response.statusMessage}');
+      if (response.statusCode == 200) {
+        _messageStatus200();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _messageStatus200() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: Text('Alert'),
+              content: Text('Se envio exitosamente'),
+              actions: <Widget>[
+                FlatButton(
+                    onPressed: () {
+                      /* SystemChannels.platform
+                          .invokeMethod('SystemNavigator.pop');*/
+                      Navigator.pushNamed(context, '/');
+                    },
+                    child: Text('Salir'))
+              ],
+            ));
   }
 }

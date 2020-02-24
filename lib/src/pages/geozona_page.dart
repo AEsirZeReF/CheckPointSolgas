@@ -1,9 +1,12 @@
+//import 'dart:io';
+
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
 import 'package:android_intent/android_intent.dart';
+//import 'package:dio/dio.dart';
 //
 //import 'package:geolocator/geolocator.dart';
 
@@ -15,7 +18,35 @@ class Geozona extends StatefulWidget {
   _GeozonaState createState() => _GeozonaState();
 }
 
-class _GeozonaState extends State<Geozona> {
+class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        //print('app paused');
+        break;
+      case AppLifecycleState.resumed:
+        // Navigator.of(context).pushNamed('/');
+        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+        //print('app resumed');
+        break;
+      case AppLifecycleState.inactive:
+        //print('app inactive');
+        break;
+      case AppLifecycleState.detached:
+        //print('app detached');
+        break;
+    }
+  }
+
+  //>>>>>>>>>>>>>
   Position getPosition = new Position();
   MapController map = new MapController();
   double _latitud;
@@ -24,23 +55,27 @@ class _GeozonaState extends State<Geozona> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkGps();
     _getLocation();
   }
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context).settings.arguments as Map<String, double>;
-
-    if (args['latitud'] == null && args['longitud'] == null) {
+    final args = ModalRoute.of(context).settings.arguments
+        as Map<String, Map<String, dynamic>>;
+    if (args['statement']['latitud'] == null &&
+        args['statement']['longitud'] == null) {
       _latitud =
           getPosition.latitude == null ? -12.050867 : getPosition.latitude;
       _longitud =
           getPosition.longitude == null ? -77.029999 : getPosition.longitude;
     } else {
-      _latitud = args['latitud'];
-      _longitud = args['longitud'];
+      _latitud = args['statement']['latitud'];
+      _longitud = args['statement']['longitud'];
+      setState(() {
+        args['geozona']['state'] = true;
+      });
     }
     return WillPopScope(
       onWillPop: () async => false,
@@ -52,65 +87,44 @@ class _GeozonaState extends State<Geozona> {
           automaticallyImplyLeading: false,
         ),
         backgroundColor: help.blue,
-        body: help.layoutFondo(
-          context,
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.62,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20), color: Colors.white),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    title: Center(
-                        child: Text(
-                      'CHECKPOINT VIRTUAL',
-                      style: TextStyle(fontSize: 25, color: Colors.blue),
-                    )),
-                    subtitle: Center(
-                        child: Text('Mi posición actual',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ))),
-                  ),
-                  Divider(
-                    color: Colors.blue,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 7),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: _crearMapa(),
-                    ),
-                  ),
-                ],
+        body: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                child: _crearMapa(),
               ),
             ),
-          ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: 50,
+                      child: FloatingActionButton(
+                        backgroundColor: Color(0xFF2e4792),
+                        onPressed: () {
+                          if (getPosition.latitude != null &&
+                              getPosition.longitude != null)
+                            map.move(
+                                LatLng(getPosition.latitude,
+                                    getPosition.longitude),
+                                17);
+                        },
+                        child: Icon(Icons.gps_fixed),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: RaisedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/scanner');
-            },
-            color: Colors.white,
-            child: Text(
-              'Siguiente',
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(width: 2, color: Colors.lightBlue))),
+        floatingActionButton: help.botonera(context, () {
+          Navigator.pushNamed(context, '/scanner', arguments: args);
+        }, color: help.blue),
       ),
     );
   }

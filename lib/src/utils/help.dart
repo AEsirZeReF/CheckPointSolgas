@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class Help {
   Color white = Colors.white;
   Color blue;
+  Color orange = Color(0xFFff6a00);
   TextStyle estiloTexto;
   TextStyle subtitle;
   TextStyle parrafo;
@@ -59,8 +60,34 @@ class Help {
     );
   }
 
+  RaisedButton botonera(BuildContext context, void Function() press,
+      {color: Color,
+      double horizontal = 32,
+      double vertical = 12,
+      String texto: 'Siguiente'}) {
+    return RaisedButton(
+        onPressed: press,
+        color: color,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+          child: Text(
+            texto,
+            style: GoogleFonts.openSans(
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50),
+          /*side: BorderSide(width: 2, color: Colors.lightBlue)*/
+        ));
+  }
+
   //diseño del fondo
-  Stack layoutFondo(BuildContext context, Widget newWidget) {
+  Stack layoutFondo(BuildContext context, Widget newWidget,
+      {floatTwo: Widget}) {
     return Stack(
       children: <Widget>[
         Container(
@@ -120,7 +147,7 @@ class Help {
                 color: Color(0xFFffa464)),
           ),
         ),*/
-        newWidget
+        newWidget,
       ],
     );
   }

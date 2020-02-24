@@ -1,9 +1,5 @@
-//import 'dart:io';
-//import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:checkpoint/src/utils/help.dart';
-//import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive/responsive.dart';
 
@@ -17,6 +13,8 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   //animacion de contenedor
   String drop = 'Eliminar';
+  var args;
+
   Map<String, List<dynamic>> _configuracion = {
     'titulo': [
       '1ra Foto: Extintor',
@@ -38,7 +36,12 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    args = ModalRoute.of(context).settings.arguments
+        as Map<String, Map<String, dynamic>>;
+
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
         appBar: AppBar(
           title: help.tituloImagen,
           centerTitle: true,
@@ -52,19 +55,8 @@ class _GalleryPageState extends State<GalleryPage> {
             children: <Widget>[_contentRow()],
           ),
         ),
-        floatingActionButton: RaisedButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, '/game');
-            },
-            icon: Icon(
-              Icons.games,
-              color: Colors.lightBlue,
-            ),
-            color: Colors.white,
-            label: Text('Game'),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-                side: BorderSide(width: 2, color: Colors.lightBlue))));
+      ),
+    );
   }
 
   Future getImage(int i) async {
@@ -74,18 +66,30 @@ class _GalleryPageState extends State<GalleryPage> {
       switch (i) {
         case 0:
           _configuracion['foto'][0] = image;
+          args['gallery']['img1'] = image;
+          _validacionFotosCompletas();
+          print(args);
+
           break;
         case 1:
           _configuracion['foto'][1] = image;
+          args['gallery']['img2'] = image;
+          _validacionFotosCompletas();
           break;
         case 2:
           _configuracion['foto'][2] = image;
+          args['gallery']['img3'] = image;
+          _validacionFotosCompletas();
           break;
         case 3:
           _configuracion['foto'][3] = image;
+          args['gallery']['img4'] = image;
+          _validacionFotosCompletas();
           break;
         case 4:
           _configuracion['foto'][4] = image;
+          args['gallery']['img5'] = image;
+          _validacionFotosCompletas();
           break;
       }
     });
@@ -97,6 +101,35 @@ class _GalleryPageState extends State<GalleryPage> {
     final result = await ImageGallerySaver.saveImage(Uint8List.fromList(lista));
     print(result);
   }*/
+  void _validacionFotosCompletas() {
+    if (_configuracion['foto'][0] != null &&
+        _configuracion['foto'][1] != null &&
+        _configuracion['foto'][2] != null &&
+        _configuracion['foto'][3] != null &&
+        _configuracion['foto'][4] != null) {
+      _messagePhotosComplete();
+      args['gallery']['state'] = true;
+      print(args['gallery']);
+    }
+  }
+
+  _messagePhotosComplete() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => AlertDialog(
+              title: Text('Captura de fotos completas'),
+              content: Text('Continue'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/game', arguments: args);
+                  },
+                  child: Text('Continuar'),
+                )
+              ],
+            ));
+  }
 
   ResponsiveRow _contentRow() {
     List<Widget> lista = new List<Widget>();
