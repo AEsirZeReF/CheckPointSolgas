@@ -28,171 +28,259 @@ class _ScannerPageState extends State<ScannerPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-          title: help.tituloImagen,
+          appBar: AppBar(
+            title: help.tituloImagen,
+            backgroundColor: help.blue,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
           backgroundColor: help.blue,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        backgroundColor: help.blue,
-        body: help.layoutFondo(
-            context,
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    _conductor == null
-                        ? _card(
-                            titulo: 'QR de Conductor',
-                            subtitulo:
-                                'Escanear el codigo QR de su carnet a una distancia adecuada.',
-                            qrmode: 'conductor')
-                        : FutureBuilder(
-                            initialData: false,
-                            future: _getConductor(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                if (snapshot.hasData) {
-                                  http.Response res = snapshot.data;
-                                  var response = json.decode(res.body);
-                                  print(response['dni']);
-                                  return Card(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        ListTile(
-                                          title:
-                                              Text('Información del conductor'),
-                                        ),
-                                        ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                              'Nombre: ${response['firstname']}',
-                                              style: TextStyle(fontSize: 20),
+          body: help.layoutFondo(
+              context,
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      _conductor == null
+                          ? _card(
+                              titulo: 'QR de Conductor',
+                              subtitulo:
+                                  'Escanear el codigo QR de su carnet a una distancia adecuada.',
+                              qrmode: 'conductor')
+                          : FutureBuilder(
+                              initialData: false,
+                              future: _getConductor(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  if (snapshot.hasData) {
+                                    http.Response response = snapshot.data;
+                                    var res = json.decode(response.body);
+                                    return Card(
+                                        child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: <Widget>[
+                                          ListTile(
+                                            leading: Icon(
+                                              Icons.supervised_user_circle,
+                                              color: Colors.blue,
                                             ),
-                                            Text(
-                                              'Apellido: ${response['lastname']}',
-                                              style: TextStyle(fontSize: 20),
+                                            title: Text(
+                                              'Información del conductor',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 18,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.blueAccent),
                                             ),
-                                            Text(
-                                              'DNI: ${response['dni']}',
-                                              style: TextStyle(fontSize: 20),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  );
+                                          ),
+                                          Divider(),
+                                          ListTile(
+                                            leading: Container(
+                                              width: 120,
+                                              height: 120,
+                                              child: CircleAvatar(
+                                                  child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                clipBehavior: Clip.antiAlias,
+                                                child: Image.asset(
+                                                    'assets/images/face.jpg'),
+                                              )),
+                                            ),
+                                            title: Text(
+                                              '${res['firstname']} ${res['lastname']}',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 22),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 20, top: 30),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text('DNI: ',
+                                                    style: GoogleFonts.roboto(
+                                                        color: Colors.black45)),
+                                                Text(
+                                                  '${res['dni']}',
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: 5,
+                                                bottom: 25),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  'License Number: ',
+                                                  style: GoogleFonts.roboto(
+                                                      color: Colors.black45),
+                                                ),
+                                                Text(
+                                                  '${res['license_number']}',
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ));
+                                  }
+                                  if (snapshot.hasError)
+                                    return CircularProgressIndicator();
                                 }
-                                if (snapshot.hasError)
-                                  return CircularProgressIndicator();
-                              }
-                              return CircularProgressIndicator();
-                            },
-                          ),
-                    _unidad == null
-                        ? _card(
-                            titulo: 'QR de Unidad',
-                            subtitulo:
-                                'Escanear el codigo QR de su carnet a una distancia adecuada.',
-                            qrmode: 'unidad')
-                        : FutureBuilder(
-                            initialData: false,
-                            future: _getConductor(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                if (snapshot.hasData) {
-                                  http.Response res = snapshot.data;
-                                  var response = json.decode(res.body);
-                                  print(response['dni']);
-                                  return Card(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        ListTile(
-                                          title:
-                                              Text('Información del conductor'),
-                                        ),
-                                        ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                              'Nombre: ${response['firstname']}',
-                                              style: TextStyle(fontSize: 20),
+                                return CircularProgressIndicator();
+                              },
+                            ),
+                      _unidad == null
+                          ? _card(
+                              titulo: 'QR de Unidad',
+                              subtitulo:
+                                  'Escanear el codigo QR de su carnet a una distancia adecuada.',
+                              qrmode: 'unidad')
+                          : FutureBuilder(
+                              initialData: false,
+                              future: _getConductor(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  if (snapshot.hasData) {
+                                    http.Response response = snapshot.data;
+                                    var res = json.decode(response.body);
+                                    return Card(
+                                        child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: <Widget>[
+                                          ListTile(
+                                            leading: Icon(
+                                              Icons.directions_car,
+                                              color: Colors.blue,
                                             ),
-                                            Text(
-                                              'Apellido: ${response['lastname']}',
-                                              style: TextStyle(fontSize: 20),
+                                            title: Text(
+                                              'Información de la unidad',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 18,
+                                                  fontStyle: FontStyle.italic,
+                                                  color: Colors.blueAccent),
                                             ),
-                                            Text(
-                                              'DNI: ${response['dni']}',
-                                              style: TextStyle(fontSize: 20),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  );
+                                          ),
+                                          Divider(),
+                                          ListTile(
+                                            leading: Container(
+                                              width: 120,
+                                              height: 120,
+                                              child: CircleAvatar(
+                                                  child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                                clipBehavior: Clip.antiAlias,
+                                                child: Image.asset(
+                                                    'assets/images/face.jpg'),
+                                              )),
+                                            ),
+                                            title: Text(
+                                              '${res['firstname']} ${res['lastname']}',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 22),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20, right: 20, top: 30),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text('DNI: ',
+                                                    style: GoogleFonts.roboto(
+                                                        color: Colors.black45)),
+                                                Text(
+                                                  '${res['dni']}',
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 20,
+                                                right: 20,
+                                                top: 5,
+                                                bottom: 25),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  'License Number: ',
+                                                  style: GoogleFonts.roboto(
+                                                      color: Colors.black45),
+                                                ),
+                                                Text(
+                                                  '${res['license_number']}',
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ));
+                                  }
+                                  if (snapshot.hasError)
+                                    return CircularProgressIndicator();
                                 }
-                                if (snapshot.hasError)
-                                  return CircularProgressIndicator();
-                              }
-                              return CircularProgressIndicator();
-                            },
-                          ),
-                  ],
+                                return CircularProgressIndicator();
+                              },
+                            ),
+                    ],
+                  ),
                 ),
-              ),
-            )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: help.botonera(context, () {
-          Navigator.pushNamed(context, '/gallery', arguments: args);
-        }, color: Color(0xFF4e619b)),
-      ),
+              )),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton:
+              /*_conductor != null && _unidad != null
+            ? */
+              help.botonera(context, () {
+            Navigator.pushNamed(context, '/gallery', arguments: args);
+          }, color: Color(0xFF4e619b))
+          /*: Container(),*/
+          ),
     );
   }
 
   Future<http.Response> _getConductor() async {
-    http.Response res = await http.get(
-        'http://190.223.43.132:8000/control/web/api/get-driver/$_conductor');
-    switch (res.statusCode) {
-      case 200:
-        return res;
-      case 400:
-        throw BadRequestException(res.body.toString());
-      case 403:
-        throw UnauthorisedException(res.body.toString());
-      case 500:
-      default:
-        throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${res.statusCode}');
-    }
-  }
-
-  /*Future<http.Response> _getUnidad() async {
+    http.Response res;
     try {
-      http.Response res =
-          await http.get('https://apirex.herokuapp.com/api/oneuser/$_unidad');
-      switch (res.statusCode) {
-        case 200:
-          return res;
-        case 400:
-          throw BadRequestException(res.body.toString());
-          break;
-        case 403:
-          throw UnauthorisedException(res.body.toString());
-          break;
-        default:
-          throw FetchDataException(
-              'Error occured while Communication with Server with StatusCode : ${res.statusCode}');
-          break;
-      }
+      res = await http.get(
+          'http://190.223.43.132:8000/control/web/api/get-driver/$_conductor');
     } catch (e) {
-      return null;
+      print(e);
     }
-  }*/
+    return res;
+  }
 
   Future _scan({String qrmode}) async {
     switch (qrmode) {
@@ -202,19 +290,17 @@ class _ScannerPageState extends State<ScannerPage> {
           setState(() => _conductor = barcode);
         } on PlatformException catch (e) {
           if (e.code == BarcodeScanner.CameraAccessDenied) {
-            setState(() {
-              this._conductor = null;
-              print('El usuario no acepto el uso de la camara!');
-            });
+            this._conductor = null;
+            print('El usuario no acepto el uso de la camara!');
           } else {
-            setState(() => _conductor = null);
+            _conductor = null;
             print('Error desconocido: $e');
           }
         } on FormatException {
-          setState(() => _conductor = null);
+          _conductor = null;
           print('El usuario utilizo el boton regresar');
         } catch (e) {
-          setState(() => _conductor = null);
+          _conductor = null;
           print('Error Desconocido: $e');
         }
         break;
@@ -224,19 +310,17 @@ class _ScannerPageState extends State<ScannerPage> {
           setState(() => _unidad = barcode);
         } on PlatformException catch (e) {
           if (e.code == BarcodeScanner.CameraAccessDenied) {
-            setState(() {
-              this._unidad = null;
-              print('El usuario no acepto el uso de la camara!');
-            });
+            this._unidad = null;
+            print('El usuario no acepto el uso de la camara!');
           } else {
-            setState(() => this._unidad = null);
+            this._unidad = null;
             print('Error desconocido: $e');
           }
         } on FormatException {
-          setState(() => this._unidad = null);
+          this._unidad = null;
           print('El usuario utilizo el boton regresar');
         } catch (e) {
-          setState(() => this._unidad = null);
+          this._unidad = null;
           print('Error Desconocido: $e');
         }
     }
@@ -244,21 +328,29 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Widget _card({String titulo, String subtitulo, String qrmode}) {
     return Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          ListTile(
-            subtitle: Text(subtitulo),
-            title: Text(
-              titulo,
-              style: GoogleFonts.lato(fontSize: 18),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                titulo,
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                ),
+              ),
+              subtitle: Text(
+                subtitulo,
+                style: GoogleFonts.roboto(fontSize: 17),
+              ),
             ),
-          ),
-          ButtonBar(
-            alignment: MainAxisAlignment.end,
-            children: <Widget>[_botonscanner(qrmode: qrmode)],
-          )
-        ],
+            ButtonBar(
+              alignment: MainAxisAlignment.end,
+              children: <Widget>[_botonscanner(qrmode: qrmode)],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -283,32 +375,4 @@ class _ScannerPageState extends State<ScannerPage> {
       ),
     );
   }
-}
-
-class AppException implements Exception {
-  final _message;
-  final _prefix;
-
-  AppException([this._message, this._prefix]);
-
-  String toString() {
-    return "$_prefix$_message";
-  }
-}
-
-class FetchDataException extends AppException {
-  FetchDataException([String message])
-      : super(message, "Error During Communication: ");
-}
-
-class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "Invalid Request: ");
-}
-
-class UnauthorisedException extends AppException {
-  UnauthorisedException([message]) : super(message, "Unauthorised: ");
-}
-
-class InvalidInputException extends AppException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:checkpoint/src/utils/help.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:responsive/responsive.dart';
 
@@ -17,18 +18,25 @@ class _GalleryPageState extends State<GalleryPage> {
 
   Map<String, List<dynamic>> _configuracion = {
     'titulo': [
-      '1ra Foto: Extintor',
-      '2da Foto: LLantas posteriores',
-      '3ra Foto: LLantas delanteras',
-      '4ta Foto: Cabina del conductor',
-      '5ta Foto: Motor',
+      'Foto: Selfie del conductor',
+      'Foto: Extintor',
+      'Foto: LLantas posteriores',
+      'Foto: LLantas delanteras',
+      'Foto: Selfie delante del carro',
     ],
     'imagen': [
+      'assets/images/selfi.jpg',
       'assets/images/img1.jpg',
       'assets/images/posterior.jpg',
       'assets/images/delanteras.jpg',
-      'assets/images/cabina.jpg',
-      'assets/images/motor.jpg'
+      'assets/images/selficar.jpg'
+    ],
+    'icon': [
+      Icons.looks_one,
+      Icons.looks_two,
+      Icons.looks_3,
+      Icons.looks_4,
+      Icons.looks_5
     ],
     'animacionImagen': [false, false, false, false, false],
     'foto': [null, null, null, null, null]
@@ -46,6 +54,7 @@ class _GalleryPageState extends State<GalleryPage> {
           title: help.tituloImagen,
           centerTitle: true,
           backgroundColor: help.blue,
+          automaticallyImplyLeading: false,
         ),
         backgroundColor: help.blue,
         body: Center(
@@ -95,12 +104,13 @@ class _GalleryPageState extends State<GalleryPage> {
     });
   }
 
-  /*Future _save() async {
+  /*Future _save(var image) async {
     List<int> lista = new List<int>();
-    await _image.writeAsBytes(lista);
+    await image.writeAsBytes(lista);
     final result = await ImageGallerySaver.saveImage(Uint8List.fromList(lista));
     print(result);
   }*/
+
   void _validacionFotosCompletas() {
     if (_configuracion['foto'][0] != null &&
         _configuracion['foto'][1] != null &&
@@ -109,7 +119,6 @@ class _GalleryPageState extends State<GalleryPage> {
         _configuracion['foto'][4] != null) {
       _messagePhotosComplete();
       args['gallery']['state'] = true;
-      print(args['gallery']);
     }
   }
 
@@ -118,15 +127,18 @@ class _GalleryPageState extends State<GalleryPage> {
         context: context,
         barrierDismissible: false,
         builder: (context) => AlertDialog(
-              title: Text('Captura de fotos completas'),
-              content: Text('Continue'),
+              title: Text('Usted a completado la captura de fotos'),
+              content: Text('Seleccione una opción'),
               actions: <Widget>[
+                FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Cancelar')),
                 FlatButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/game', arguments: args);
                   },
                   child: Text('Continuar'),
-                )
+                ),
               ],
             ));
   }
@@ -146,35 +158,22 @@ class _GalleryPageState extends State<GalleryPage> {
   FlexWidget _contentCard(int i) {
     return FlexWidget(
       child: Card(
-          child: ListBody(
+          child: Column(
         children: <Widget>[
           ListTile(
             title: Text(
               _configuracion['titulo'][i],
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.lightBlue),
+              style: GoogleFonts.roboto(
+                  color: Colors.lightBlue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
             ),
-            trailing: DropdownButton(
-                value: drop,
-                elevation: 12,
-                iconEnabledColor: Colors.lightBlue,
-                items: <String>['Eliminar', 'Editar'].map((value) {
-                  return DropdownMenuItem(
-                    child: Text(
-                      value,
-                      style: TextStyle(color: Colors.lightBlue),
-                    ),
-                    value: value,
-                  );
-                }).toList(),
-                onChanged: (newvalue) {
-                  print('$newvalue');
-                  setState(() {
-                    if (newvalue == 'Eliminar')
-                      _configuracion['foto'][i] = null;
-                    drop = newvalue;
-                  });
-                }),
+            subtitle: Text('Tomar la foto a una buena distancia'),
+            leading: Icon(
+              _configuracion['icon'][i],
+              color: Colors.blue,
+              size: 28,
+            ),
           ),
           GestureDetector(
             onTap: () {
@@ -184,6 +183,7 @@ class _GalleryPageState extends State<GalleryPage> {
               });
             },
             child: AnimatedContainer(
+              width: MediaQuery.of(context).size.width,
               duration: Duration(milliseconds: 700),
               height: _configuracion['animacionImagen'][i] ? 300 : 150,
               curve: Curves.fastOutSlowIn,
@@ -197,25 +197,56 @@ class _GalleryPageState extends State<GalleryPage> {
                       : FileImage(_configuracion['foto'][i])),
             ),
           ),
-          ListTile(
-              title: Text(
-                'Tomar la foto a una buena distancia',
-                style: TextStyle(color: Colors.lightBlue),
-              ),
-              subtitle: Text('Precionar la imagen par expandirla.'),
-              trailing: GestureDetector(
-                onTap: () {
-                  getImage(i);
-                },
-                child: Icon(
-                  Icons.camera_alt,
-                  size: 40,
-                  color: Colors.lightBlue,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 6,
                 ),
-              ))
+                Expanded(child: Container()),
+                FlatButton(
+                  child: Text('Eliminar',
+                      style: GoogleFonts.roboto(
+                          fontSize: 16,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    setState(() {
+                      _configuracion['foto'][i] = null;
+                    });
+                  },
+                ),
+                FlatButton(
+                  child: Text(
+                    'Capturar',
+                    style: GoogleFonts.roboto(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.lightBlue),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      getImage(i);
+                      _configuracion['animacionImagen'][i] = true;
+                      _animacionAuto(i);
+                    });
+                  },
+                ),
+              ],
+            ),
+          )
         ],
       )),
       xs: 12,
     );
+  }
+
+  _animacionAuto(int index) {
+    for (var i = 0; i < _configuracion['animacionImagen'].length; i++) {
+      if (index != i) {
+        _configuracion['animacionImagen'][i] = false;
+      }
+    }
   }
 }
