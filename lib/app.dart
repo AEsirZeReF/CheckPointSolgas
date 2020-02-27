@@ -6,6 +6,7 @@ import 'package:checkpoint/src/pages/load_page.dart';
 import 'package:checkpoint/src/pages/scanner_page.dart';
 import 'package:checkpoint/src/pages/statement_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class MyApp extends StatefulWidget {
   // This widget is the root of your application.
@@ -13,7 +14,27 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      print('resumed');
+      Phoenix.rebirth(context);
+    }
+  }
+
   void main() {
     runApp(MaterialApp(
       home: LoadPage(),

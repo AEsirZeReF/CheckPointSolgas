@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 //
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class Statement extends StatefulWidget {
   @override
@@ -42,7 +43,8 @@ class _StatementState extends State<Statement> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: help.botonera(context, () {
-          if (enviar == true && acepto == true) {
+          Phoenix.rebirth(context);
+          /*if (enviar == true && acepto == true) {
             Navigator.pushNamed(context, '/geozona',
                 arguments: <String, Map<String, dynamic>>{
                   'statement': {
@@ -65,7 +67,7 @@ class _StatementState extends State<Statement> {
                     'img5': null
                   }
                 });
-          }
+          }*/
         }, color: Color(0xFF4e619b), texto: 'Confirmar'),
         body: help.layoutFondo(
             context,

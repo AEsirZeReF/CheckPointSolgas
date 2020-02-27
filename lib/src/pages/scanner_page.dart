@@ -153,7 +153,7 @@ class _ScannerPageState extends State<ScannerPage> {
                           ? _card(
                               titulo: 'QR de Unidad',
                               subtitulo:
-                                  'Escanear el codigo QR de su carnet a una distancia adecuada.',
+                                  'Escanear el codigo QR que se encuentra en la unidad.',
                               qrmode: 'unidad')
                           : FutureBuilder(
                               initialData: false,

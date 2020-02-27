@@ -20,11 +20,7 @@ class _ImageExample2State extends State<ImageExample2> {
             Hero(
               tag: "DemoTag",
               child: Container(
-                color: Colors.blue,
-                child: Icon(
-                  Icons.add,
-                  size: 150.0,
-                ),
+                child: Image.asset('assets/images/selfi.jpg'),
               ),
             ),
           ],

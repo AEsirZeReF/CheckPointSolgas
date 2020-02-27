@@ -189,9 +189,6 @@ class GamePageState extends State<GamePage> {
                     ),
                     itemCount: data.length,
                   ),
-                  SizedBox(
-                    height: 50,
-                  )
                 ],
               ),
             )),
@@ -225,11 +222,14 @@ class GamePageState extends State<GamePage> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text("Usted completado el formulario Solgas"),
+        title: Text(
+          "Usted completado el formulario Solgas",
+          style: GoogleFonts.roboto(color: Colors.lightBlueAccent),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("tiempo: $time",
+            Text("Tiempo: $time",
                 style: GoogleFonts.roboto(
                   fontSize: 20,
                 )),
@@ -248,7 +248,11 @@ class GamePageState extends State<GamePage> {
               Navigator.pop(context);
               setState(() {});
             },
-            child: Text("Enviar Datos"),
+            child: Text(
+              "Enviar Datos",
+              style:
+                  GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
@@ -290,7 +294,10 @@ class GamePageState extends State<GamePage> {
         barrierDismissible: false,
         builder: (context) => AlertDialog(
               title: Text('Alert'),
-              content: Text('Se envio exitosamente'),
+              content: Text(
+                'Se envio exitosamente',
+                style: GoogleFonts.roboto(fontSize: 20),
+              ),
               actions: <Widget>[
                 FlatButton(
                     onPressed: () {
@@ -298,7 +305,11 @@ class GamePageState extends State<GamePage> {
                           .invokeMethod('SystemNavigator.pop');*/
                       Navigator.pushNamed(context, '/');
                     },
-                    child: Text('Salir'))
+                    child: Text('Salir',
+                        style: GoogleFonts.roboto(
+                            fontSize: 18,
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold)))
               ],
             ));
   }

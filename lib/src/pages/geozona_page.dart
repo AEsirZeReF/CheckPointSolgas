@@ -4,6 +4,7 @@ import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong/latlong.dart';
 import 'package:android_intent/android_intent.dart';
 //import 'package:dio/dio.dart';
@@ -194,11 +195,18 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("No se puede obtener la ubicación"),
-              content: const Text('Por favor active su GPS'),
+              title: Text(
+                "Necesitamos su localización actual",
+                style: GoogleFonts.roboto(fontSize: 20),
+              ),
+              content: Text('Por favor active su GPS'),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Ok'),
+                  child: Text('ACTIVAR',
+                      style: GoogleFonts.roboto(
+                          fontSize: 18,
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold)),
                   onPressed: () {
                     final AndroidIntent intent = AndroidIntent(
                         action: 'android.settings.LOCATION_SOURCE_SETTINGS');
