@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:checkpoint/src/utils/help.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 //
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class Statement extends StatefulWidget {
   @override
@@ -26,6 +25,7 @@ class _StatementState extends State<Statement> {
   @override
   void initState() {
     super.initState();
+    _checkConnection();
     _getLocation();
   }
 
@@ -43,8 +43,7 @@ class _StatementState extends State<Statement> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: help.botonera(context, () {
-          Phoenix.rebirth(context);
-          /*if (enviar == true && acepto == true) {
+          if (enviar == true && acepto == true) {
             Navigator.pushNamed(context, '/geozona',
                 arguments: <String, Map<String, dynamic>>{
                   'statement': {
@@ -53,11 +52,7 @@ class _StatementState extends State<Statement> {
                     'longitud': longitud
                   },
                   'geozona': {'state': false},
-                  'scanner': {
-                    'state': false,
-                    'unidad': null,
-                    'conductor': null
-                  },
+                  'scanner': {'unidad': null, 'conductor': null},
                   'gallery': {
                     'state': false,
                     'img1': null,
@@ -67,7 +62,7 @@ class _StatementState extends State<Statement> {
                     'img5': null
                   }
                 });
-          }*/
+          }
         }, color: Color(0xFF4e619b), texto: 'Confirmar'),
         body: help.layoutFondo(
             context,
@@ -161,5 +156,65 @@ class _StatementState extends State<Statement> {
       latitud = getPosition.latitude;
       longitud = getPosition.longitude;
     });
+  }
+
+  _checkConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      print('I am connected to a mobile network.');
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      print('I am connected to a wifi network.');
+    } else {
+      print('NO esta conectado a internet');
+      _messageNoInternet();
+    }
+  }
+
+  _messageNoInternet() {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (_) => WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                titlePadding: EdgeInsets.all(0),
+                title: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(2),
+                        topRight: Radius.circular(2)),
+                    child: Image.asset(
+                      'assets/images/lost.jpg',
+                      fit: BoxFit.cover,
+                      height: 250,
+                    ),
+                  ),
+                ),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'No esta conectado a internet',
+                      style: GoogleFonts.roboto(
+                          fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    RaisedButton(
+                        color: Color(0xFF2cb3a9),
+                        onPressed: () {
+                          Phoenix.rebirth(context);
+                        },
+                        child: Text('REINTENTAR',
+                            style: GoogleFonts.roboto(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)))
+                  ],
+                ),
+              ),
+            ));
   }
 }

@@ -28,42 +28,46 @@ class _ScannerPageState extends State<ScannerPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-          appBar: AppBar(
-            title: help.tituloImagen,
-            backgroundColor: help.blue,
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-          ),
+        appBar: AppBar(
+          title: help.tituloImagen,
           backgroundColor: help.blue,
-          body: help.layoutFondo(
-              context,
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      _conductor == null
-                          ? _card(
-                              titulo: 'QR de Conductor',
-                              subtitulo:
-                                  'Escanear el codigo QR de su carnet a una distancia adecuada.',
-                              qrmode: 'conductor')
-                          : FutureBuilder(
-                              initialData: false,
-                              future: _getConductor(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasData) {
-                                    http.Response response = snapshot.data;
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+        ),
+        backgroundColor: help.blue,
+        body: help.layoutFondo(
+            context,
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    _conductor == null
+                        ? _card(
+                            titulo: 'QR de Conductor',
+                            subtitulo:
+                                'Escanear el codigo QR de su carnet a una distancia adecuada.',
+                            qrmode: 'conductor')
+                        : FutureBuilder(
+                            initialData: false,
+                            future: _getConductor(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasData) {
+                                  http.Response response = snapshot.data;
+                                  if (response.statusCode == 200) {
                                     var res = json.decode(response.body);
                                     return Card(
                                         child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 5),
                                       child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: <Widget>[
                                           ListTile(
                                             leading: Icon(
@@ -142,33 +146,41 @@ class _ScannerPageState extends State<ScannerPage> {
                                         ],
                                       ),
                                     ));
+                                  } else {
+                                    return _card(
+                                        titulo: 'QR de Conductor',
+                                        subtitulo:
+                                            'Escanear el codigo QR de su carnet a una distancia adecuada.',
+                                        qrmode: 'conductor');
                                   }
-                                  if (snapshot.hasError)
-                                    return CircularProgressIndicator();
                                 }
-                                return CircularProgressIndicator();
-                              },
-                            ),
-                      _unidad == null
-                          ? _card(
-                              titulo: 'QR de Unidad',
-                              subtitulo:
-                                  'Escanear el codigo QR que se encuentra en la unidad.',
-                              qrmode: 'unidad')
-                          : FutureBuilder(
-                              initialData: false,
-                              future: _getConductor(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasData) {
-                                    http.Response response = snapshot.data;
+                                if (snapshot.hasError)
+                                  return CircularProgressIndicator();
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          ),
+                    _unidad == null
+                        ? _card(
+                            titulo: 'QR de Unidad',
+                            subtitulo:
+                                'Escanear el codigo QR que se encuentra en la unidad.',
+                            qrmode: 'unidad')
+                        : FutureBuilder(
+                            initialData: false,
+                            future: _getUnidad(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                if (snapshot.hasData) {
+                                  http.Response response = snapshot.data;
+                                  if (response.statusCode == 200) {
                                     var res = json.decode(response.body);
                                     return Card(
-                                        child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
                                       child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           ListTile(
                                             leading: Icon(
@@ -184,102 +196,66 @@ class _ScannerPageState extends State<ScannerPage> {
                                             ),
                                           ),
                                           Divider(),
-                                          ListTile(
-                                            leading: Container(
-                                              width: 120,
-                                              height: 120,
-                                              child: CircleAvatar(
-                                                  child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                clipBehavior: Clip.antiAlias,
-                                                child: Image.asset(
-                                                    'assets/images/face.jpg'),
-                                              )),
-                                            ),
-                                            title: Text(
-                                              '${res['firstname']} ${res['lastname']}',
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 25),
+                                            child: Text(
+                                              'Licencia:  ${res['license_plate']}',
                                               style: GoogleFonts.roboto(
                                                   fontSize: 22),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20, right: 20, top: 30),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text('DNI: ',
-                                                    style: GoogleFonts.roboto(
-                                                        color: Colors.black45)),
-                                                Text(
-                                                  '${res['dni']}',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 18),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 20,
-                                                right: 20,
-                                                top: 5,
-                                                bottom: 25),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  'License Number: ',
-                                                  style: GoogleFonts.roboto(
-                                                      color: Colors.black45),
-                                                ),
-                                                Text(
-                                                  '${res['license_number']}',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 18),
-                                                )
-                                              ],
                                             ),
                                           )
                                         ],
                                       ),
-                                    ));
+                                    );
+                                  } else {
+                                    return _card(
+                                        titulo: 'QR de Unidad',
+                                        subtitulo:
+                                            'Escanear el codigo QR que se encuentra en la unidad.',
+                                        qrmode: 'unidad');
                                   }
-                                  if (snapshot.hasError)
-                                    return CircularProgressIndicator();
                                 }
-                                return CircularProgressIndicator();
-                              },
-                            ),
-                    ],
-                  ),
+                                if (snapshot.hasError)
+                                  return CircularProgressIndicator();
+                              }
+                              return CircularProgressIndicator();
+                            },
+                          ),
+                  ],
                 ),
-              )),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton:
-              /*_conductor != null && _unidad != null
-            ? */
-              help.botonera(context, () {
-            Navigator.pushNamed(context, '/gallery', arguments: args);
-          }, color: Color(0xFF4e619b))
-          /*: Container(),*/
-          ),
+              ),
+            )),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: _conductor != null && _unidad != null
+            ? help.botonera(context, () {
+                args['scanner']['conductor'] = _conductor;
+                args['scanner']['unidad'] = _unidad;
+                Navigator.pushNamed(context, '/gallery', arguments: args);
+              }, color: Color(0xFF4e619b))
+            : Container(),
+      ),
     );
   }
 
-  Future<http.Response> _getConductor() async {
-    http.Response res;
+  Future _getConductor() async {
     try {
-      res = await http.get(
+      return await http.get(
           'http://190.223.43.132:8000/control/web/api/get-driver/$_conductor');
     } catch (e) {
       print(e);
+      return null;
     }
-    return res;
+  }
+
+  Future<http.Response> _getUnidad() async {
+    try {
+      return await http
+          .get('http://190.223.43.132:8000/control/web/api/get-unit/$_unidad');
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Future _scan({String qrmode}) async {
@@ -287,7 +263,9 @@ class _ScannerPageState extends State<ScannerPage> {
       case 'conductor':
         try {
           String barcode = await BarcodeScanner.scan();
-          setState(() => _conductor = barcode);
+          setState(() {
+            _conductor = barcode;
+          });
         } on PlatformException catch (e) {
           if (e.code == BarcodeScanner.CameraAccessDenied) {
             this._conductor = null;
@@ -307,7 +285,10 @@ class _ScannerPageState extends State<ScannerPage> {
       case 'unidad':
         try {
           String barcode = await BarcodeScanner.scan();
-          setState(() => _unidad = barcode);
+          print(barcode);
+          setState(() {
+            _unidad = barcode;
+          });
         } on PlatformException catch (e) {
           if (e.code == BarcodeScanner.CameraAccessDenied) {
             this._unidad = null;
@@ -374,5 +355,15 @@ class _ScannerPageState extends State<ScannerPage> {
         borderRadius: BorderRadius.circular(10.0),
       ),
     );
+  }
+}
+
+class FetchDataException implements Exception {
+  final _message;
+  FetchDataException([this._message]);
+
+  String toString() {
+    if (_message == null) return "Exception";
+    return "Exception: $_message";
   }
 }

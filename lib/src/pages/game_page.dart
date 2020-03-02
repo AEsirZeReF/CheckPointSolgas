@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class GamePage extends StatefulWidget {
@@ -38,6 +39,8 @@ class GamePageState extends State<GamePage> {
   };
   int time = 0;
   Timer timer;
+  int timeStart = 0;
+  Timer timerStart;
   String nota = 'Nota';
   @override
   void initState() {
@@ -54,6 +57,9 @@ class GamePageState extends State<GamePage> {
     }
 
     data.shuffle();
+    Future.delayed(Duration(milliseconds: 500), () {
+      messageStart();
+    });
   }
 
   startTimer() {
@@ -61,6 +67,15 @@ class GamePageState extends State<GamePage> {
       setState(() {
         time = time + 1;
         _calificaion();
+      });
+    });
+  }
+
+  gameStart() {
+    timerStart = Timer.periodic(Duration(seconds: 1), (t) {
+      setState(() {
+        timeStart++;
+        print(timeStart);
       });
     });
   }
@@ -99,8 +114,8 @@ class GamePageState extends State<GamePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 50, bottom: 20, right: 50),
+                    padding: const EdgeInsets.only(
+                        left: 20, bottom: 5, right: 20, top: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -128,135 +143,204 @@ class GamePageState extends State<GamePage> {
                       ],
                     ),
                   ),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                    ),
-                    itemBuilder: (context, index) => FlipCard(
-                      key: cardStateKeys[index],
-                      onFlip: () {
-                        if (!flip) {
-                          flip = true;
-                          previousIndex = index;
-                        } else {
-                          flip = false;
-                          if (previousIndex != index) {
-                            if (data[previousIndex] != data[index]) {
-                              cardStateKeys[previousIndex]
-                                  .currentState
-                                  .toggleCard();
-                              previousIndex = index;
-                            } else {
-                              cardFlips[previousIndex] = false;
-                              cardFlips[index] = false;
-                              print(cardFlips);
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.90,
+                    height: MediaQuery.of(context).size.height * 0.74,
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                      ),
+                      itemBuilder: (context, index) => FlipCard(
+                        key: cardStateKeys[index],
+                        onFlip: () {
+                          if (!flip) {
+                            flip = true;
+                            previousIndex = index;
+                          } else {
+                            flip = false;
+                            if (previousIndex != index) {
+                              if (data[previousIndex] != data[index]) {
+                                cardStateKeys[previousIndex]
+                                    .currentState
+                                    .toggleCard();
+                                previousIndex = index;
+                              } else {
+                                cardFlips[previousIndex] = false;
+                                cardFlips[index] = false;
+                                print(cardFlips);
 
-                              if (cardFlips.every((t) => t == false)) {
-                                print("Won");
-                                showResult();
-                                setState(() => timer.cancel());
+                                if (cardFlips.every((t) => t == false)) {
+                                  print("Won");
+                                  _gameCompleted();
+                                  setState(() => timer.cancel());
+                                }
                               }
                             }
                           }
-                        }
-                      },
-                      direction: FlipDirection.HORIZONTAL,
-                      flipOnTouch: cardFlips[index],
-                      front: Container(
-                        margin: EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                            border: Border.all(width: 2, color: Colors.white),
-                            image: DecorationImage(
-                                image: AssetImage('assets/images/gamecard.png'),
-                                fit: BoxFit.cover)),
-                      ),
-                      back: Container(
-                        margin: EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: AssetImage(
-                                    'assets/images/${_coleccionImagenes['imagen'][int.parse(data[index])]}'))),
-                        child: Center(
-                          child: Text(
-                            "${data[index]}",
-                            style: TextStyle(color: Colors.white, fontSize: 10),
+                        },
+                        direction: FlipDirection.HORIZONTAL,
+                        flipOnTouch: cardFlips[index],
+                        front: Container(
+                          margin: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              border: Border.all(width: 2, color: Colors.white),
+                              image: DecorationImage(
+                                  image:
+                                      AssetImage('assets/images/gamecard.png'),
+                                  fit: BoxFit.cover)),
+                        ),
+                        back: Container(
+                          margin: EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                      'assets/images/${_coleccionImagenes['imagen'][int.parse(data[index])]}'))),
+                          child: Center(
+                            child: Text(
+                              "${data[index]}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 10),
+                            ),
                           ),
                         ),
                       ),
+                      itemCount: data.length,
                     ),
-                    itemCount: data.length,
                   ),
                 ],
               ),
-            )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: RaisedButton(
-            onPressed: () {
-              startTimer();
-            },
-            color: Color(0xFF4e619b),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              child: Text(
-                'Iniciar Test!',
-                style: GoogleFonts.openSans(
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-              /*side: BorderSide(width: 2, color: Colors.lightBlue)*/
             )),
       ),
     );
   }
 
-  showResult() {
+  _gameCompleted() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text(
-          "Usted completado el formulario Solgas",
-          style: GoogleFonts.roboto(color: Colors.lightBlueAccent),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text("Tiempo: $time",
-                style: GoogleFonts.roboto(
-                  fontSize: 20,
-                )),
-            Text(
-              "Calificación: $nota",
-              style: GoogleFonts.roboto(
-                fontSize: 20,
+      builder: (context) => WillPopScope(
+        onWillPop: () async => false,
+        child: AlertDialog(
+          title: Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(2), topRight: Radius.circular(2)),
+              child: Image.asset(
+                'assets/images/completed.gif',
+                height: 120,
+                fit: BoxFit.cover,
               ),
-            )
-          ],
-        ),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              _postInformation();
-              Navigator.pop(context);
-              setState(() {});
-            },
-            child: Text(
-              "Enviar Datos",
-              style:
-                  GoogleFonts.roboto(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-        ],
+          titlePadding: EdgeInsets.all(0),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('COMPLETASTE EL CHECKPOINT VIRTUAL',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepOrangeAccent)),
+              Text("Tiempo: $time seg",
+                  style: GoogleFonts.roboto(
+                    fontSize: 20,
+                  )),
+              Text(
+                "Calificación: '$nota'",
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      _postInformation();
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                    color: Colors.deepOrangeAccent,
+                    child: Text(
+                      "ENVIAR",
+                      style: GoogleFonts.roboto(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
       ),
     );
+  }
+
+  messageStart() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                titlePadding: EdgeInsets.all(0),
+                title: Container(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(2)),
+                      child: Image.asset('assets/images/start.gif')),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'JUEGO DE MEMORIA',
+                      style: GoogleFonts.roboto(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Se calificara según los segundos que se demore',
+                      style: GoogleFonts.roboto(),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                          color: Colors.red,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              startTimer();
+                            });
+                          },
+                          child: Text(
+                            'INICIAR',
+                            style: GoogleFonts.montserrat(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ));
   }
 
   _postInformation() async {
@@ -264,10 +348,10 @@ class GamePageState extends State<GamePage> {
     FormData formData = new FormData.fromMap({
       'latitude': '${args['statement']['latitud']}',
       'longitude': '${args['statement']['longitud']}',
-      'timestamp': 'Es tarde',
+      'timestamp': '${DateTime.now()}',
       'game_score': '$time',
-      'unitid': 'placa',
-      'driverid': '12345678',
+      'unitid': '${args['scanner']['unidad']}',
+      'driverid': '${args['scanner']['conductor']}',
       'image1': args['gallery']['img1'],
       'image2': args['gallery']['img2'],
       'image3': args['gallery']['img3'],
@@ -292,25 +376,28 @@ class GamePageState extends State<GamePage> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AlertDialog(
-              title: Text('Alert'),
-              content: Text(
-                'Se envio exitosamente',
-                style: GoogleFonts.roboto(fontSize: 20),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                    onPressed: () {
-                      /* SystemChannels.platform
-                          .invokeMethod('SystemNavigator.pop');*/
-                      Navigator.pushNamed(context, '/');
-                    },
-                    child: Text('Salir',
-                        style: GoogleFonts.roboto(
-                            fontSize: 18,
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold)))
-              ],
+        builder: (context) => WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                  title: Container(
+                    child: Image.asset(
+                      'assets/images/envio.jpg',
+                      fit: BoxFit.cover,
+                      height: 150,
+                    ),
+                  ),
+                  content: RaisedButton(
+                      onPressed: () {
+                        SystemChannels.platform
+                            .invokeMethod('SystemNavigator.pop');
+                        // Navigator.pushNamed(context, '/');
+                      },
+                      color: Colors.red,
+                      child: Text('Salir',
+                          style: GoogleFonts.roboto(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)))),
             ));
   }
 

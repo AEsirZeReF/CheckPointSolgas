@@ -15,14 +15,15 @@ class _GalleryPageState extends State<GalleryPage> {
   //animacion de contenedor
   String drop = 'Eliminar';
   var args;
-  int indexcam;
+  int indexcam = 0;
+  bool zoom = false;
 
   Map<String, List<dynamic>> _configuracion = {
     'titulo': [
       'Foto 1: Selfie del conductor',
       'Foto 2: Extintor',
-      'Foto 3: LLantas posteriores',
-      'Foto 4: LLantas delanteras',
+      'Foto 3: Llantas posteriores',
+      'Foto 4: Llantas delanteras',
       'Foto 5: Selfie delante del carro',
     ],
     'imagen': [
@@ -40,7 +41,8 @@ class _GalleryPageState extends State<GalleryPage> {
       Icons.looks_5
     ],
     'animacionImagen': [false, false, false, false, false],
-    'foto': [null, null, null, null, null]
+    'foto': [null, null, null, null, null],
+    'zoom': [false, false, false, false, false]
   };
 
   @override
@@ -68,7 +70,6 @@ class _GalleryPageState extends State<GalleryPage> {
               indexcam = val;
             });
           },
-          //control: new SwiperControl(),
           itemBuilder: (context, index) {
             return _contentCard(index);
           },
@@ -83,14 +84,21 @@ class _GalleryPageState extends State<GalleryPage> {
             children: <Widget>[
               IconButton(
                   icon: Icon(
-                    Icons.menu,
+                    Icons.open_with,
                     color: Colors.white,
+                    size: 30,
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    setState(() {
+                      _configuracion['zoom'][indexcam] =
+                          !_configuracion['zoom'][indexcam];
+                    });
+                  }),
               IconButton(
                   icon: Icon(
                     Icons.check,
                     color: Colors.white,
+                    size: 30,
                   ),
                   onPressed: () {
                     if (_configuracion['foto'][0] != null &&
@@ -108,14 +116,13 @@ class _GalleryPageState extends State<GalleryPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xFF020d2f),
-          /*shape:
-              BeveledRectangleBorder(borderRadius: BorderRadius.circular(50)),*/
+          tooltip: 'Capturar imagen',
           onPressed: () {
             getImage(indexcam);
           },
           child: Icon(
             Icons.camera_alt,
-            size: 30,
+            size: 35,
           ),
         ),
       ),
@@ -123,17 +130,14 @@ class _GalleryPageState extends State<GalleryPage> {
   }
 
   Future getImage(int i) async {
-    var image = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-    );
+    var image =
+        await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1200);
     setState(() {
       switch (i) {
         case 0:
           _configuracion['foto'][0] = image;
           args['gallery']['img1'] = image;
           _validacionFotosCompletas();
-          print(args);
-
           break;
         case 1:
           _configuracion['foto'][1] = image;
@@ -159,13 +163,6 @@ class _GalleryPageState extends State<GalleryPage> {
     });
   }
 
-  /*Future _save(var image) async {
-    List<int> lista = new List<int>();
-    await image.writeAsBytes(lista);
-    final result = await ImageGallerySaver.saveImage(Uint8List.fromList(lista));
-    print(result);
-  }*/
-
   void _validacionFotosCompletas() {
     if (_configuracion['foto'][0] != null &&
         _configuracion['foto'][1] != null &&
@@ -181,34 +178,70 @@ class _GalleryPageState extends State<GalleryPage> {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AlertDialog(
-              title: Text('Usted a completado la captura de fotos'),
-              content: Text('Seleccione una opción'),
-              actions: <Widget>[
-                FlatButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Cancelar',
-                        style: GoogleFonts.roboto(
-                            fontSize: 18, fontWeight: FontWeight.bold))),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/game', arguments: args);
-                  },
-                  child: Text('Continuar',
-                      style: GoogleFonts.roboto(
-                          fontSize: 18, fontWeight: FontWeight.bold)),
+        builder: (context) => WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                title: Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(2),
+                        topRight: Radius.circular(2)),
+                    child: Image.asset(
+                      'assets/images/completed.jpg',
+                      height: 120,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-              ],
+                contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                titlePadding: EdgeInsets.all(0),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Usted a completado la captura de fotos',
+                      style: GoogleFonts.roboto(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Text('Seleciones una opción'),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        RaisedButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            color: Colors.lightBlue,
+                            child: Text('CANCELAR',
+                                style: GoogleFonts.roboto(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white))),
+                        RaisedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/game',
+                                arguments: args);
+                          },
+                          color: Colors.lightGreen,
+                          child: Text('CONTINUAR',
+                              style: GoogleFonts.roboto(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ));
   }
-
-  /*List<Widget> _contentRow() {
-    List<Widget> lista = new List<Widget>();
-    for (var i = 0; i < 5; i++) {
-      lista.add(_contentCard(i));
-    }
-    return lista;
-  }*/
 
   _contentCard(int i) {
     return Stack(
@@ -216,61 +249,35 @@ class _GalleryPageState extends State<GalleryPage> {
         Align(
           alignment: Alignment.center,
           child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                      'assets/images/cool.png',
+                    ),
+                    fit: BoxFit.cover)),
             width: MediaQuery.of(context).size.width,
             height: double.infinity,
-            color: Colors.white,
             child: FadeInImage(
-                fit: BoxFit.cover,
+                fit: _configuracion['zoom'][i] ? BoxFit.contain : BoxFit.cover,
                 placeholder: AssetImage('assets/images/BeanEater.gif'),
                 image: _configuracion['foto'][i] == null
                     ? AssetImage(_configuracion['imagen'][i])
                     : FileImage(_configuracion['foto'][i])),
           ),
         ),
-        /*Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                  icon: Icon(
-                    Icons.camera_alt,
-                    size: 200,
-                  ),
-                  onPressed: () {}),
-            ),*/
         Align(
           alignment: Alignment.topLeft,
           child: Container(
             color: Colors.black54,
             child: ListTile(
-              /*contentPadding:
-                  EdgeInsets.symmetric(vertical: 20, horizontal: 10),*/
-              title: Text(_configuracion['titulo'][i],
-                  style: GoogleFonts.roboto(color: Colors.white, fontSize: 30)),
-              /*trailing: GestureDetector(
-                onTap: () {
-                  getImage(i);
-                  setState(() {
-                    _configuracion['animacionImagen'][i] = true;
-                    _animacionAuto(i);
-                  });
-                },
-                child: Icon(
-                  Icons.camera_alt,
-                  color: Colors.white,
-                  size: 45,
-                ),
-              ),*/
-            ),
+                title: Text(_configuracion['titulo'][i],
+                    style: GoogleFonts.roboto(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold))),
           ),
         )
       ],
     );
   }
-
-  /*_animacionAuto(int index) {
-    for (var i = 0; i < _configuracion['animacionImagen'].length; i++) {
-      if (index != i) {
-        _configuracion['animacionImagen'][i] = false;
-      }
-    }
-  }*/
 }

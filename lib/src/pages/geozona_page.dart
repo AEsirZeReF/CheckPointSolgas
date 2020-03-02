@@ -1,6 +1,7 @@
 //import 'dart:io';
 
 import 'package:checkpoint/src/utils/help.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -19,52 +20,30 @@ class Geozona extends StatefulWidget {
   _GeozonaState createState() => _GeozonaState();
 }
 
-class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
-  @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance.removeObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.paused:
-        //print('app paused');
-        break;
-      case AppLifecycleState.resumed:
-        // Navigator.of(context).pushNamed('/');
-        // SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-        //print('app resumed');
-        break;
-      case AppLifecycleState.inactive:
-        //print('app inactive');
-        break;
-      case AppLifecycleState.detached:
-        //print('app detached');
-        break;
-    }
-  }
-
-  //>>>>>>>>>>>>>
+class _GeozonaState extends State<Geozona> {
   Position getPosition = new Position();
   MapController map = new MapController();
   double _latitud;
   double _longitud;
-
+  bool _visible = false;
+  var args;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _checkGps();
     _getLocation();
+    Future.delayed(Duration(seconds: 5), () {
+      setState(() {
+        _visible = !_visible;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context).settings.arguments
+    args = ModalRoute.of(context).settings.arguments
         as Map<String, Map<String, dynamic>>;
+
     if (args['statement']['latitud'] == null &&
         args['statement']['longitud'] == null) {
       _latitud =
@@ -81,53 +60,171 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        appBar: AppBar(
-          title: help.tituloImagen,
+          appBar: AppBar(
+            title: help.tituloImagen,
+            backgroundColor: help.blue,
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+          ),
           backgroundColor: help.blue,
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        backgroundColor: help.blue,
-        body: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                child: _crearMapa(),
+          body: Stack(
+            children: <Widget>[
+              Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  child: _crearMapa(),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      child: FloatingActionButton(
-                        backgroundColor: Color(0xFF2e4792),
-                        onPressed: () {
-                          if (getPosition.latitude != null &&
-                              getPosition.longitude != null)
-                            map.move(
-                                LatLng(getPosition.latitude,
-                                    getPosition.longitude),
-                                17);
-                        },
-                        child: Icon(Icons.gps_fixed),
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        width: 50,
+                        child: FloatingActionButton(
+                          backgroundColor: Color(0xFF2e4792),
+                          onPressed: () {
+                            if (getPosition.latitude != null &&
+                                getPosition.longitude != null)
+                              map.move(
+                                  LatLng(getPosition.latitude,
+                                      getPosition.longitude),
+                                  17);
+                          },
+                          child: Icon(Icons.gps_fixed),
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: AnimatedOpacity(
+            duration: Duration(seconds: 1),
+            opacity: _visible ? 1.0 : 0.0,
+            child: RaisedButton(
+                onPressed: () async {
+                  try {
+                    Dio dio = new Dio();
+                    Response res = await dio.get(
+                        'http://190.223.43.132:8000/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
+                    if (res.statusCode == 200) {
+                      _checkValido();
+                    } else {
+                      _checkNOValido();
+                    }
+                  } catch (e) {
+                    print(e);
+                    _checkNOValido();
+                  }
+                },
+                color: help.blue,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  child: Text(
+                    'CHECKPOINT',
+                    style: GoogleFonts.openSans(
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                  /*side: BorderSide(width: 2, color: Colors.lightBlue)*/
+                )),
+          )),
+    );
+  }
+
+  _checkValido() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => WillPopScope(
+              onWillPop: () async => false,
+              child: AlertDialog(
+                title: Container(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(2)),
+                      child: Image.asset('assets/images/validado.jpg')),
+                ),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'POSICIÓN CORRECTAMENTE VALIDADA',
+                      style: GoogleFonts.roboto(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    RaisedButton(
+                        color: Colors.lightGreen,
+                        child: Text(
+                          'Continuar',
+                          style: GoogleFonts.roboto(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/scanner',
+                              arguments: args);
+                        })
                   ],
                 ),
               ),
-            )
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: help.botonera(context, () {
-          Navigator.pushNamed(context, '/scanner', arguments: args);
-        }, color: help.blue),
-      ),
-    );
+            ));
+  }
+
+  _checkNOValido() {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => WillPopScope(
+              onWillPop: () async => true,
+              child: AlertDialog(
+                title: Container(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(2)),
+                      child: Image.asset('assets/images/disconnect.jpg')),
+                ),
+                content: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      'Hubo un problema con la conexión',
+                      style: GoogleFonts.roboto(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    RaisedButton(
+                        color: Colors.lightGreen,
+                        child: Text('REINTENTAR'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
+              ),
+            ));
   }
 
   Widget _crearMapa() {
@@ -142,7 +239,7 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
         _cargarTemplate(),
         _crearMarcadores(),
         //_crearGeozonas(),
-        _crearPoligonos()
+        //_crearPoligonos()
       ],
     );
   }
@@ -192,6 +289,7 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
     if (!(await Geolocator().isLocationServiceEnabled())) {
       if (Theme.of(context).platform == TargetPlatform.android) {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -233,7 +331,7 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
     ]);
   }*/
 
-  _crearPoligonos() {
+  /*_crearPoligonos() {
     return PolygonLayerOptions(polygons: <Polygon>[
       new Polygon(points: <LatLng>[
         LatLng(37.421015, -122.085488),
@@ -242,5 +340,5 @@ class _GeozonaState extends State<Geozona> with WidgetsBindingObserver {
         LatLng(37.421164, -122.082140)
       ], color: Color.fromRGBO(0, 0, 0, 0.0), borderStrokeWidth: 2)
     ]);
-  }
+  }*/
 }
