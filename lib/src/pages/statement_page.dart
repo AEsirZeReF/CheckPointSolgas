@@ -18,9 +18,8 @@ class _StatementState extends State<Statement> {
   bool acepto = false;
   bool enviar = true;
   String declaracion =
-      'Una declaración jurada es una manifestación escrita o verbal cuya veracidad es asegurada mediante un juramento ante una autoridad judicial o administrativa. Esto hace que el contenido de la declaración sea tomado como cierto hasta que se demuestre lo contrario.La institución de la declaración jurada ha sido establecida por diversos sistemas jurídicos, tanto de Common law como del Derecho continental, en gran parte para dar rapidez a ciertos trámites legales, sustituyendo transitoriamente a la presentación de documentos escritos o testimonios de terceros, mediante una presunción iuris tantum (que admite prueba en contrario).La importancia de la declaración jurada se halla en el hecho que permite abreviar procedimientos tanto ante autoridades judiciales como administrativas, y al mismo tiempo genera una responsabilidad legal para el declarante en caso que la declaración jurada resulte ser contraria a la verdad de los hechos que se acrediten posteriormente, equiparando la declaración jurada con un efectivo juramento o promesa de decir la verdad. Este último elemento puede tener consecuencias a nivel penal en los ordenamientos jurídicos que consideran al perjurio (o violación de juramento) como un delito, o en los países que imponen castigos penales o administrativos para quien formula cualquier declaración falsa ante ciertas autoridades.';
+      'Solgas S.A. informa que sus datos personales han sido proporcionados por su empleador o la empresa que lo contrató,quien manifestó conocer y cumplir con la Ley N° 29733, Ley de Protección de Datos Personales, su Reglamento, aprobado por Decreto Supremo N° 003-2013-JUS, y todas las demás normas referidas a protección de datos personales. En ese sentido, declaró contar con su respectivo consentimiento.';
   bool alert = true;
-
   var height;
   @override
   void initState() {
@@ -51,16 +50,25 @@ class _StatementState extends State<Statement> {
                     'latitud': latitud,
                     'longitud': longitud
                   },
-                  'geozona': {'state': false},
+                  'geozona': {'state': false, 'name': null},
+                  'status': {'estado': null},
                   'scanner': {'unidad': null, 'conductor': null},
+                  'type': {'tipooperacion': null},
                   'gallery': {
                     'state': false,
                     'img1': null,
                     'img2': null,
                     'img3': null,
                     'img4': null,
-                    'img5': null
-                  }
+                    'img5': null,
+                    'img6': null,
+                    'img7': null,
+                    'img8': null,
+                    'img9': null,
+                    'img10': null,
+                    'img11': null,
+                    'img12': null,
+                  },
                 });
           }
         }, color: Color(0xFF4e619b), texto: 'Confirmar'),
@@ -90,27 +98,98 @@ class _StatementState extends State<Statement> {
                           ? MediaQuery.of(context).size.height * 0.30
                           : MediaQuery.of(context).size.height * 0.43,
                       child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Text(
-                          declaracion,
-                          style: GoogleFonts.roboto(
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.justify,
-                        ),
-                      ),
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Text(
+                                declaracion,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 10)),
+                              Text(
+                                'Por medio de la presente, acepto y declaro que:',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5)),
+                              Text(
+                                '1)	Me comprometo a usar el presente aplicativo.',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2)),
+                              Text(
+                                '2)	Conozco que la información recabada mediante el aplicativo será de uso exclusivo de Solgas S.A. y, por tanto, no debe ser compartida con ningún tercero.',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2)),
+                              Text(
+                                '3)	Usaré el aplicativo únicamente para los servicios contratados por Solgas.',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2)),
+                              Text(
+                                '4)	El uso del aplicativo es estrictamente personal.',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5)),
+                              Text(
+                                'Tengo pleno entendimiento de lo que aquí acepto y declaro; por lo tanto, doy mi conformidad.',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          )),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Checkbox(
-                          onChanged: (val) {
-                            setState(() {
-                              acepto = val;
-                            });
-                          },
-                          value: acepto,
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            unselectedWidgetColor: Colors.white,
+                          ),
+                          child: Checkbox(
+                            checkColor: Colors.white,
+                            activeColor: Colors.blue[500],
+                            value: acepto,
+                            onChanged: (bool val) {
+                              setState(() {
+                                acepto = val;
+                              });
+                            },
+                          ),
                         ),
                         Text('Acepta todos los terminos y condiciones',
                             style:
@@ -120,13 +199,20 @@ class _StatementState extends State<Statement> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Checkbox(
-                          onChanged: (val) {
-                            setState(() {
-                              enviar = val;
-                            });
-                          },
-                          value: enviar,
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            unselectedWidgetColor: Colors.white,
+                          ),
+                          child: Checkbox(
+                            checkColor: Colors.white,
+                            activeColor: Colors.blue[500],
+                            value: enviar,
+                            onChanged: (bool val) {
+                              setState(() {
+                                enviar = val;
+                              });
+                            },
+                          ),
                         ),
                         Text('Se enviara toda la información',
                             style:
@@ -161,11 +247,11 @@ class _StatementState extends State<Statement> {
   _checkConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.mobile) {
-      print('I am connected to a mobile network.');
+      //print('I am connected to a mobile network.');
     } else if (connectivityResult == ConnectivityResult.wifi) {
-      print('I am connected to a wifi network.');
+      //print('I am connected to a wifi network.');
     } else {
-      print('NO esta conectado a internet');
+      //print('NO esta conectado a internet');
       _messageNoInternet();
     }
   }

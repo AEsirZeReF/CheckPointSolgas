@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:checkpoint/src/pages/gallery_page.dart';
+import 'package:checkpoint/src/pages/galleryenvasado_page.dart';
 import 'package:checkpoint/src/pages/geozona_page.dart';
 import 'package:checkpoint/src/pages/game_page.dart';
 import 'package:checkpoint/src/pages/load_page.dart';
 import 'package:checkpoint/src/pages/scanner_page.dart';
 import 'package:checkpoint/src/pages/statement_page.dart';
+import 'package:checkpoint/src/pages/status_page.dart';
+import 'package:checkpoint/src/pages/typechannel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -86,7 +89,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         '/geozona': (context) => Geozona(),
         '/scanner': (content) => ScannerPage(),
         '/gallery': (context) => GalleryPage(),
-        '/game': (context) => GamePage()
+        '/game': (context) => GamePage(),
+        '/status': (context) => StatusPage(),
+        '/channel': (context) => TypeChannelPage(),
+        '/galleryenvasado': (context) => GalleryEnvasadoPage()
       },
     );
   }

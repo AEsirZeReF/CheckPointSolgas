@@ -4,14 +4,14 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
-class GalleryPage extends StatefulWidget {
-  GalleryPage({Key key}) : super(key: key);
+class GalleryEnvasadoPage extends StatefulWidget {
+  GalleryEnvasadoPage({Key key}) : super(key: key);
 
   @override
-  _GalleryPageState createState() => _GalleryPageState();
+  _GalleryEnvasadoPageState createState() => _GalleryEnvasadoPageState();
 }
 
-class _GalleryPageState extends State<GalleryPage> {
+class _GalleryEnvasadoPageState extends State<GalleryEnvasadoPage> {
   //animacion de contenedor
   String drop = 'Eliminar';
   var args;
@@ -49,8 +49,8 @@ class _GalleryPageState extends State<GalleryPage> {
       '5 Toma posterior de la unidad',
       '6 Luces delanteras',
       '7 Luces posteriores',
-      '8 Hermeticidad de cisterna',
-      '9 Válvula interna',
+      '8 Estado de plataforma',
+      '9 Eslingas colocadas',
     ],
     'imagen': [
       'assets/images/ga1.png',
@@ -281,7 +281,7 @@ class _GalleryPageState extends State<GalleryPage> {
         args['gallery']['img12'] != null) {
       args['gallery']['state'] = true;
       _messagePhotosComplete();
-
+      print(args);
       args['gallery'].forEach((k, v) => print('$k  $v'));
     }
   }

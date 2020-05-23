@@ -1,4 +1,5 @@
 import 'package:checkpoint/src/pages/statement_page.dart';
+//import 'package:checkpoint/src/pages/typechannel_page.dart';
 import 'package:checkpoint/src/utils/help.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

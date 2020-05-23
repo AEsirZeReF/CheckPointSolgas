@@ -23,16 +23,16 @@ class GamePageState extends State<GamePage> {
   var args;
   Map<String, List<String>> _coleccionImagenes = {
     'imagen': [
-      '01.png',
-      '02.jpg',
-      '03.jpg',
-      '04.jpg',
-      '05.jpg',
-      '06.jpg',
-      '07.jpg',
-      '08.jpg',
-      '09.jpg',
-      '10.jpg',
+      'solgas_01.JPG',
+      'solgas_02.jpg',
+      'solgas_03.jpg',
+      'solgas_04.jpg',
+      'solgas_05.JPG',
+      'solgas_06.JPG',
+      'solgas_07.JPG',
+      'solgas_08.JPG',
+      'solgas_09.jpg',
+      'solgas_10.jpg',
       '11.jpg',
       '12.jpg'
     ]
@@ -75,7 +75,7 @@ class GamePageState extends State<GamePage> {
     timerStart = Timer.periodic(Duration(seconds: 1), (t) {
       setState(() {
         timeStart++;
-        print(timeStart);
+        //print(timeStart);
       });
     });
   }
@@ -83,12 +83,14 @@ class GamePageState extends State<GamePage> {
   _calificaion() {
     if (time <= 20) {
       setState(() => nota = 'A');
-    } else if (time <= 40 && time > 20) {
+    } else if (time >= 21 && time <= 30) {
       setState(() => nota = 'B');
-    } else if (time <= 60 && time > 40) {
+    } else if (time >= 31 && time <= 40) {
       setState(() => nota = 'C');
+    } else if (time >= 41 && time <= 50) {
+      setState(() => nota = 'D');
     } else {
-      setState(() => nota = 'Jalado!');
+      setState(() => nota = 'F');
     }
   }
 
@@ -169,10 +171,10 @@ class GamePageState extends State<GamePage> {
                               } else {
                                 cardFlips[previousIndex] = false;
                                 cardFlips[index] = false;
-                                print(cardFlips);
+                                //print(cardFlips);
 
                                 if (cardFlips.every((t) => t == false)) {
-                                  print("Won");
+                                  //print("Won");
                                   _gameCompleted();
                                   setState(() => timer.cancel());
                                 }
@@ -224,7 +226,7 @@ class GamePageState extends State<GamePage> {
       builder: (context) => WillPopScope(
         onWillPop: () async => false,
         child: AlertDialog(
-          title: Container(
+          /* title: Container(
             child: ClipRRect(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(2), topRight: Radius.circular(2)),
@@ -234,7 +236,7 @@ class GamePageState extends State<GamePage> {
                 fit: BoxFit.cover,
               ),
             ),
-          ),
+          ),*/
           titlePadding: EdgeInsets.all(0),
           content: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -252,6 +254,12 @@ class GamePageState extends State<GamePage> {
                   )),
               Text(
                 "Calificación: '$nota'",
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                tablaRangos(nota),
                 style: GoogleFonts.roboto(
                   fontSize: 20,
                 ),
@@ -286,6 +294,24 @@ class GamePageState extends State<GamePage> {
     );
   }
 
+  String tablaRangos(String nota) {
+    String text;
+    switch (nota) {
+      case 'A':
+        text = 'Excelentes condiciones';
+        break;
+      case 'B':
+        text = 'Buen desempeño';
+        break;
+      case 'F':
+        text = 'Por favor contactar a su superior';
+        break;
+      default:
+        text = '';
+    }
+    return text;
+  }
+
   messageStart() {
     showDialog(
         context: context,
@@ -294,13 +320,13 @@ class GamePageState extends State<GamePage> {
               onWillPop: () async => false,
               child: AlertDialog(
                 titlePadding: EdgeInsets.all(0),
-                title: Container(
+                /*title: Container(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(2),
                           topRight: Radius.circular(2)),
                       child: Image.asset('assets/images/start.gif')),
-                ),
+                ),*/
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -348,15 +374,37 @@ class GamePageState extends State<GamePage> {
     FormData formData = new FormData.fromMap({
       'latitude': '${args['statement']['latitud']}',
       'longitude': '${args['statement']['longitud']}',
-      'timestamp': '${DateTime.now()}',
+      'timestamp': _dateConvert(),
       'game_score': '$time',
       'unitid': '${args['scanner']['unidad']}',
       'driverid': '${args['scanner']['conductor']}',
-      'image1': args['gallery']['img1'],
-      'image2': args['gallery']['img2'],
-      'image3': args['gallery']['img3'],
-      'image4': args['gallery']['img4'],
-      'image5': args['gallery']['img5']
+      'image1': await MultipartFile.fromFile(args['gallery']['img1'].path,
+          filename: args['gallery']['img1'].path.split('/').last),
+      'image2': await MultipartFile.fromFile(args['gallery']['img2'].path,
+          filename: args['gallery']['img2'].path.split('/').last),
+      'image3': await MultipartFile.fromFile(args['gallery']['img3'].path,
+          filename: args['gallery']['img3'].path.split('/').last),
+      'image4': await MultipartFile.fromFile(args['gallery']['img4'].path,
+          filename: args['gallery']['img4'].path.split('/').last),
+      'image5': await MultipartFile.fromFile(args['gallery']['img5'].path,
+          filename: args['gallery']['img5'].path.split('/').last),
+      'image6': await MultipartFile.fromFile(args['gallery']['img6'].path,
+          filename: args['gallery']['img6'].path.split('/').last),
+      'image7': await MultipartFile.fromFile(args['gallery']['img7'].path,
+          filename: args['gallery']['img7'].path.split('/').last),
+      'image8': await MultipartFile.fromFile(args['gallery']['img8'].path,
+          filename: args['gallery']['img8'].path.split('/').last),
+      'image9': await MultipartFile.fromFile(args['gallery']['img9'].path,
+          filename: args['gallery']['img9'].path.split('/').last),
+      'image10': await MultipartFile.fromFile(args['gallery']['img10'].path,
+          filename: args['gallery']['img10'].path.split('/').last),
+      'image11': await MultipartFile.fromFile(args['gallery']['img11'].path,
+          filename: args['gallery']['img11'].path.split('/').last),
+      'image12': await MultipartFile.fromFile(args['gallery']['img12'].path,
+          filename: args['gallery']['img12'].path.split('/').last),
+      'checkpoint': args['geozona']['name'],
+      'estado': args['status']['estado'],
+      'tipo': args['type']['tipooperacion']
     });
     try {
       String urlJ = 'http://190.223.43.132:8000/upload/';
@@ -366,10 +414,16 @@ class GamePageState extends State<GamePage> {
       print('Response message ${response.statusMessage}');
       if (response.statusCode == 200) {
         _messageStatus200();
+        print(args);
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  String _dateConvert() {
+    String hora = '${DateTime.now().millisecondsSinceEpoch / 1000}';
+    return hora.split('.').first;
   }
 
   _messageStatus200() {

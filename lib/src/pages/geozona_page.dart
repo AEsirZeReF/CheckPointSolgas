@@ -1,13 +1,14 @@
 //import 'dart:io';
+import 'dart:convert';
 
 import 'package:checkpoint/src/utils/help.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong/latlong.dart';
 import 'package:android_intent/android_intent.dart';
+import 'package:http/http.dart' as http;
 //import 'package:dio/dio.dart';
 //
 //import 'package:geolocator/geolocator.dart';
@@ -109,10 +110,14 @@ class _GeozonaState extends State<Geozona> {
             child: RaisedButton(
                 onPressed: () async {
                   try {
-                    Dio dio = new Dio();
-                    Response res = await dio.get(
+                    var res = await http.get(
                         'http://190.223.43.132:8000/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
                     if (res.statusCode == 200) {
+                      var resformat = json.decode(res.body);
+                      setState(() {
+                        args['geozona']['name'] =
+                            resformat['checkpoint']['name'];
+                      });
                       _checkValido();
                     } else {
                       _checkNOValido();
@@ -181,7 +186,7 @@ class _GeozonaState extends State<Geozona> {
                               color: Colors.white),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/scanner',
+                          Navigator.pushNamed(context, '/status',
                               arguments: args);
                         })
                   ],

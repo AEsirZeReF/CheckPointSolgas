@@ -83,7 +83,7 @@ class _ScannerPageState extends State<ScannerPage> {
                                             ),
                                           ),
                                           Divider(),
-                                          ListTile(
+                                          /*ListTile(
                                             leading: Container(
                                               width: 120,
                                               height: 120,
@@ -101,6 +101,16 @@ class _ScannerPageState extends State<ScannerPage> {
                                               style: GoogleFonts.roboto(
                                                   fontSize: 22),
                                             ),
+                                          ),*/
+                                          Text(
+                                            '${res['firstname']}',
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 22),
+                                          ),
+                                          Text(
+                                            '${res['lastname']}',
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 22),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -231,7 +241,7 @@ class _ScannerPageState extends State<ScannerPage> {
             ? help.botonera(context, () {
                 args['scanner']['conductor'] = _conductor;
                 args['scanner']['unidad'] = _unidad;
-                Navigator.pushNamed(context, '/gallery', arguments: args);
+                Navigator.pushNamed(context, '/channel', arguments: args);
               }, color: Color(0xFF4e619b))
             : Container(),
       ),
@@ -285,7 +295,7 @@ class _ScannerPageState extends State<ScannerPage> {
       case 'unidad':
         try {
           String barcode = await BarcodeScanner.scan();
-          print(barcode);
+          //print(barcode);
           setState(() {
             _unidad = barcode;
           });
@@ -342,6 +352,7 @@ class _ScannerPageState extends State<ScannerPage> {
       color: Colors.deepOrange,
       onPressed: () {
         _scan(qrmode: qrmode);
+        //print(args);
       },
       icon: Icon(
         Icons.camera_alt,
