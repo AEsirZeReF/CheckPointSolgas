@@ -400,8 +400,10 @@ class GamePageState extends State<GamePage> {
           filename: args['gallery']['img10'].path.split('/').last),
       'image11': await MultipartFile.fromFile(args['gallery']['img11'].path,
           filename: args['gallery']['img11'].path.split('/').last),
-      'image12': await MultipartFile.fromFile(args['gallery']['img12'].path,
-          filename: args['gallery']['img12'].path.split('/').last),
+      'image12': args['gallery']['img12'] == null
+          ? ' '
+          : await MultipartFile.fromFile(args['gallery']['img12'].path,
+              filename: args['gallery']['img12'].path.split('/').last),
       'checkpoint': args['geozona']['name'],
       'estado': args['status']['estado'],
       'tipo': args['type']['tipooperacion']
@@ -414,7 +416,11 @@ class GamePageState extends State<GamePage> {
       print('Response message ${response.statusMessage}');
       if (response.statusCode == 200) {
         _messageStatus200();
-        print(args);
+        args['statement'].forEach((k, v) => print('$k  $v'));
+        args['geozona'].forEach((k, v) => print('$k  $v'));
+        args['status'].forEach((k, v) => print('$k  $v'));
+        args['type'].forEach((k, v) => print('$k  $v'));
+        args['gallery'].forEach((k, v) => print('$k  $v'));
       }
     } catch (e) {
       print(e);

@@ -210,7 +210,7 @@ class _ScannerPageState extends State<ScannerPage> {
                                             padding: const EdgeInsets.only(
                                                 bottom: 25),
                                             child: Text(
-                                              'Licencia:  ${res['license_plate']}',
+                                              'Placa:  ${res['license_plate']}',
                                               style: GoogleFonts.roboto(
                                                   fontSize: 22),
                                             ),
@@ -328,12 +328,12 @@ class _ScannerPageState extends State<ScannerPage> {
               title: Text(
                 titulo,
                 style: GoogleFonts.roboto(
-                  fontSize: 20,
+                  fontSize: 24,
                 ),
               ),
               subtitle: Text(
                 subtitulo,
-                style: GoogleFonts.roboto(fontSize: 17),
+                style: GoogleFonts.roboto(fontSize: 20),
               ),
             ),
             ButtonBar(
@@ -348,7 +348,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Widget _botonscanner({String qrmode}) {
     return FlatButton.icon(
-      padding: EdgeInsets.only(top: 7, left: 30, bottom: 7, right: 30),
+      padding: EdgeInsets.only(top: 7, left: 28, bottom: 7, right: 28),
       color: Colors.deepOrange,
       onPressed: () {
         _scan(qrmode: qrmode);
@@ -357,10 +357,11 @@ class _ScannerPageState extends State<ScannerPage> {
       icon: Icon(
         Icons.camera_alt,
         color: help.white,
+        size: 34,
       ),
       label: Text(
         'Escanear QR',
-        style: help.parrafo,
+        style: GoogleFonts.lato(color: Colors.white, fontSize: 20),
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),

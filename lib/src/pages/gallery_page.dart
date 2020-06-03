@@ -22,10 +22,10 @@ class _GalleryPageState extends State<GalleryPage> {
       'Tomar foto Llantas',
     ],
     'imagen': [
-      'assets/images/ga3.jpg',
-      'assets/images/ga4.jpg',
-      'assets/images/ga3.jpg',
-      'assets/images/ga4.jpg',
+      'assets/images/llanta1.jpg',
+      'assets/images/llanta2.png',
+      'assets/images/llanta3.jpg',
+      'assets/images/llanta4.png',
     ],
     'foto': [
       null,
@@ -42,26 +42,25 @@ class _GalleryPageState extends State<GalleryPage> {
   };
   Map<String, List<dynamic>> _configuracion = {
     'titulo': [
-      '1 Selfie del conductor',
-      '2 Extintor',
-      '3 Todas las llantas',
-      '4 Toma frontal de la unidad',
-      '5 Toma posterior de la unidad',
-      '6 Luces delanteras',
-      '7 Luces posteriores',
-      '8 Hermeticidad de cisterna',
-      '9 Válvula interna',
+      'Selfie del conductor',
+      'Extintor',
+      'Todas las llantas',
+      'Toma frontal de la unidad',
+      'Toma posterior de la unidad',
+      'Luces delanteras',
+      'Luces posteriores',
+      //'8 Hermeticidad de cisterna',
+      'Válvula interna',
     ],
     'imagen': [
       'assets/images/ga1.png',
       'assets/images/ga2.png',
       'assets/images/ga1.png',
-      'assets/images/ga2.png',
-      'assets/images/ga1.png',
-      'assets/images/ga2.png',
-      'assets/images/ga1.png',
-      'assets/images/ga2.png',
-      'assets/images/ga2.png',
+      'assets/images/frontalcamion.jpg',
+      'assets/images/posteriorcamion.jpg',
+      'assets/images/frontalluces.jpg',
+      'assets/images/posteriorluces.jpg',
+      'assets/images/botonrojo.jpg',
     ],
     'foto': [
       null,
@@ -72,10 +71,8 @@ class _GalleryPageState extends State<GalleryPage> {
       null,
       null,
       null,
-      null,
     ],
     'zoom': [
-      true,
       true,
       true,
       true,
@@ -103,7 +100,7 @@ class _GalleryPageState extends State<GalleryPage> {
         ),
         //backgroundColor: help.blue,
         body: Swiper(
-          itemCount: 9,
+          itemCount: 8,
           layout: SwiperLayout.DEFAULT,
           scrollDirection: Axis.vertical,
           pagination: new SwiperPagination(),
@@ -171,15 +168,23 @@ class _GalleryPageState extends State<GalleryPage> {
       switch (i) {
         case 0:
           _configuracionLlantas['foto'][0] = image;
+          args['gallery']['img3'] = image;
+          _validacionFotosCompletas();
           break;
         case 1:
           _configuracionLlantas['foto'][1] = image;
+          args['gallery']['img4'] = image;
+          _validacionFotosCompletas();
           break;
         case 2:
           _configuracionLlantas['foto'][2] = image;
+          args['gallery']['img5'] = image;
+          _validacionFotosCompletas();
           break;
         case 3:
           _configuracionLlantas['foto'][3] = image;
+          args['gallery']['img6'] = image;
+          _validacionFotosCompletas();
           break;
       }
     });
@@ -256,11 +261,11 @@ class _GalleryPageState extends State<GalleryPage> {
             args['gallery']['img11'] = image;
             _validacionFotosCompletas();
             break;
-          case 8:
+          /*case 8:
             _configuracion['foto'][8] = image;
             args['gallery']['img12'] = image;
             _validacionFotosCompletas();
-            break;
+            break;*/
         }
       });
     }
@@ -277,8 +282,7 @@ class _GalleryPageState extends State<GalleryPage> {
         args['gallery']['img8'] != null &&
         args['gallery']['img9'] != null &&
         args['gallery']['img10'] != null &&
-        args['gallery']['img11'] != null &&
-        args['gallery']['img12'] != null) {
+        args['gallery']['img11'] != null) {
       args['gallery']['state'] = true;
       _messagePhotosComplete();
 
@@ -396,38 +400,53 @@ class _GalleryPageState extends State<GalleryPage> {
                         color: Colors.teal[100],
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder:
-                              AssetImage('assets/images/BeanEater.gif'),
-                          image: _configuracionLlantas['foto'][1] == null
-                              ? AssetImage(_configuracionLlantas['imagen'][1])
-                              : FileImage(_configuracionLlantas['foto'][1])),
-                      color: Colors.teal[200],
+                    InkWell(
+                      onTap: () {
+                        getImageLlantas(1);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder:
+                                AssetImage('assets/images/BeanEater.gif'),
+                            image: _configuracionLlantas['foto'][1] == null
+                                ? AssetImage(_configuracionLlantas['imagen'][1])
+                                : FileImage(_configuracionLlantas['foto'][1])),
+                        color: Colors.teal[200],
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder:
-                              AssetImage('assets/images/BeanEater.gif'),
-                          image: _configuracionLlantas['foto'][2] == null
-                              ? AssetImage(_configuracionLlantas['imagen'][2])
-                              : FileImage(_configuracionLlantas['foto'][2])),
-                      color: Colors.teal[300],
+                    InkWell(
+                      onTap: () {
+                        getImageLlantas(2);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder:
+                                AssetImage('assets/images/BeanEater.gif'),
+                            image: _configuracionLlantas['foto'][2] == null
+                                ? AssetImage(_configuracionLlantas['imagen'][2])
+                                : FileImage(_configuracionLlantas['foto'][2])),
+                        color: Colors.teal[300],
+                      ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(2),
-                      child: FadeInImage(
-                          fit: BoxFit.cover,
-                          placeholder:
-                              AssetImage('assets/images/BeanEater.gif'),
-                          image: _configuracionLlantas['foto'][3] == null
-                              ? AssetImage(_configuracionLlantas['imagen'][3])
-                              : FileImage(_configuracionLlantas['foto'][3])),
-                      color: Colors.teal[400],
+                    InkWell(
+                      onTap: () {
+                        getImageLlantas(3);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        child: FadeInImage(
+                            fit: BoxFit.cover,
+                            placeholder:
+                                AssetImage('assets/images/BeanEater.gif'),
+                            image: _configuracionLlantas['foto'][3] == null
+                                ? AssetImage(_configuracionLlantas['imagen'][3])
+                                : FileImage(_configuracionLlantas['foto'][3])),
+                        color: Colors.teal[400],
+                      ),
                     ),
                   ],
                 ),
