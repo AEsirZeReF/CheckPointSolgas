@@ -22,10 +22,10 @@ class _GalleryEnvasadoPageState extends State<GalleryEnvasadoPage> {
       'Tomar foto Llantas',
     ],
     'imagen': [
-      'assets/images/ga3.jpg',
-      'assets/images/ga4.jpg',
-      'assets/images/ga3.jpg',
-      'assets/images/ga4.jpg',
+      'assets/images/llanta1.jpg',
+      'assets/images/llanta2.jpg',
+      'assets/images/llanta3.jpg',
+      'assets/images/llanta4.jpg',
     ],
     'foto': [
       null,

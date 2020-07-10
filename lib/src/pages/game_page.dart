@@ -406,21 +406,23 @@ class GamePageState extends State<GamePage> {
               filename: args['gallery']['img12'].path.split('/').last),
       'checkpoint': args['geozona']['name'],
       'estado': args['status']['estado'],
-      'tipo': args['type']['tipooperacion']
+      'tipo': args['type']['tipooperacion'],
+      'time': (DateTime.now().millisecondsSinceEpoch / 1000) -
+          args['temporizador']['tiempo']
     });
     try {
       String urlJ = 'http://190.223.43.132:8000/upload/';
       var url = urlJ;
       var response = await dio.post(url, data: formData);
-      print('Response status ${response.statusCode}');
-      print('Response message ${response.statusMessage}');
+      //print('Response status ${response.statusCode}');
+      //print('Response message ${response.statusMessage}');
       if (response.statusCode == 200) {
         _messageStatus200();
-        args['statement'].forEach((k, v) => print('$k  $v'));
+        /*args['statement'].forEach((k, v) => print('$k  $v'));
         args['geozona'].forEach((k, v) => print('$k  $v'));
         args['status'].forEach((k, v) => print('$k  $v'));
         args['type'].forEach((k, v) => print('$k  $v'));
-        args['gallery'].forEach((k, v) => print('$k  $v'));
+        args['gallery'].forEach((k, v) => print('$k  $v'));*/
       }
     } catch (e) {
       print(e);
@@ -448,6 +450,7 @@ class GamePageState extends State<GamePage> {
                   ),
                   content: RaisedButton(
                       onPressed: () {
+                        print(args['temporizador']['tiempo']);
                         SystemChannels.platform
                             .invokeMethod('SystemNavigator.pop');
                         // Navigator.pushNamed(context, '/');

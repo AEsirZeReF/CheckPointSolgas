@@ -202,13 +202,13 @@ class _GeozonaState extends State<Geozona> {
         builder: (_) => WillPopScope(
               onWillPop: () async => true,
               child: AlertDialog(
-                title: Container(
+                /*title: Container(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(2),
                           topRight: Radius.circular(2)),
                       child: Image.asset('assets/images/disconnect.jpg')),
-                ),
+                ),*/
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

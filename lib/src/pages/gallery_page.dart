@@ -23,9 +23,9 @@ class _GalleryPageState extends State<GalleryPage> {
     ],
     'imagen': [
       'assets/images/llanta1.jpg',
-      'assets/images/llanta2.png',
+      'assets/images/llanta2.jpg',
       'assets/images/llanta3.jpg',
-      'assets/images/llanta4.png',
+      'assets/images/llanta4.jpg',
     ],
     'foto': [
       null,

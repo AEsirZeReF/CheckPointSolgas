@@ -186,6 +186,7 @@ class _ScannerPageState extends State<ScannerPage> {
                                   http.Response response = snapshot.data;
                                   if (response.statusCode == 200) {
                                     var res = json.decode(response.body);
+                                    print(res);
                                     return Card(
                                       child: Column(
                                         mainAxisAlignment:
@@ -208,11 +209,21 @@ class _ScannerPageState extends State<ScannerPage> {
                                           Divider(),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                bottom: 25),
+                                                bottom: 20),
                                             child: Text(
                                               'Placa:  ${res['license_plate']}',
                                               style: GoogleFonts.roboto(
-                                                  fontSize: 22),
+                                                  fontSize: 20),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 25,
+                                            ),
+                                            child: Text(
+                                              'Operador logistico:  ${res['logistic_operator']}',
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 20),
                                             ),
                                           )
                                         ],

@@ -13,6 +13,7 @@ class Statement extends StatefulWidget {
 }
 
 class _StatementState extends State<Statement> {
+  var tiempoInicial = DateTime.now().millisecondsSinceEpoch / 1000;
   double latitud;
   double longitud;
   bool acepto = false;
@@ -26,6 +27,16 @@ class _StatementState extends State<Statement> {
     super.initState();
     _checkConnection();
     _getLocation();
+  }
+
+  Timer timer;
+  int time = 0;
+  startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (t) {
+      setState(() {
+        time = time + 1;
+      });
+    });
   }
 
   @override
@@ -69,6 +80,7 @@ class _StatementState extends State<Statement> {
                     'img11': null,
                     'img12': null,
                   },
+                  'temporizador': {'tiempo': tiempoInicial}
                 });
           }
         }, color: Color(0xFF4e619b), texto: 'Confirmar'),
