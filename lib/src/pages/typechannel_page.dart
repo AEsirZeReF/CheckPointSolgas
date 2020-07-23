@@ -30,108 +30,110 @@ class _TypeChannelPageState extends State<TypeChannelPage> {
           ),
           backgroundColor: help.blue,
           body: help.layoutFondo(
-            context,
-            Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: MediaQuery.of(context).size.width * 0.18)),
-                  Text(
-                    'Seleccionar el tipo',
-                    style: GoogleFonts.openSans(
-                      color: Colors.white,
-                      fontSize: 33,
+              context,
+              Align(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                        padding: EdgeInsets.symmetric(
+                            vertical:
+                                MediaQuery.of(context).size.width * 0.18)),
+                    Text(
+                      'Seleccionar el tipo',
+                      style: GoogleFonts.openSans(
+                        color: Colors.white,
+                        fontSize: 33,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'de operación',
-                    style: GoogleFonts.openSans(
-                      color: Colors.white,
-                      fontSize: 33,
+                    Text(
+                      'de operación',
+                      style: GoogleFonts.openSans(
+                        color: Colors.white,
+                        fontSize: 33,
+                      ),
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-                  Container(
-                      padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Theme(
-                              data: Theme.of(context).copyWith(
-                                unselectedWidgetColor: Colors.white,
-                              ),
-                              child: new Transform.scale(
-                                scale: 1.4,
-                                child: Checkbox(
-                                  checkColor: Colors.white,
-                                  activeColor: Colors.blue[500],
-                                  value: granel,
-                                  onChanged: (bool val) {
-                                    granel = val;
-                                    //print('este es granel :$granel');
-                                    setState(() {
-                                      args['type']['tipooperacion'] = 'granel';
-                                      if (envasado) {
-                                        envasado = false;
-                                      }
-                                    });
-                                  },
+                    Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+                    Container(
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Theme(
+                                data: Theme.of(context).copyWith(
+                                  unselectedWidgetColor: Colors.white,
                                 ),
-                              )),
-                          Text(
-                            'GRANEL ',
-                            style: GoogleFonts.openSans(
-                              color: Colors.white,
-                              fontSize: 30,
-                            ),
-                          ),
-                        ],
-                      )),
-                  Container(
-                      padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Theme(
-                              data: Theme.of(context).copyWith(
-                                unselectedWidgetColor: Colors.white,
-                              ),
-                              child: new Transform.scale(
-                                scale: 1.4,
-                                child: Checkbox(
+                                child: new Transform.scale(
+                                  scale: 1.4,
+                                  child: Checkbox(
                                     checkColor: Colors.white,
                                     activeColor: Colors.blue[500],
-                                    value: envasado,
-                                    onChanged: (value) {
-                                      envasado = value;
+                                    value: granel,
+                                    onChanged: (bool val) {
+                                      granel = val;
+                                      //print('este es granel :$granel');
                                       setState(() {
                                         args['type']['tipooperacion'] =
-                                            'envasado';
-                                        //print('este es envasado :$envasado');
-                                        if (granel) {
-                                          granel = false;
+                                            'granel';
+                                        if (envasado) {
+                                          envasado = false;
                                         }
                                       });
-                                    }),
-                              )),
-                          Text(
-                            'ENVASADO ',
-                            style: GoogleFonts.openSans(
-                              color: Colors.white,
-                              fontSize: 30,
+                                    },
+                                  ),
+                                )),
+                            Text(
+                              'GRANEL ',
+                              style: GoogleFonts.openSans(
+                                color: Colors.white,
+                                fontSize: 30,
+                              ),
                             ),
-                          ),
-                        ],
-                      )),
-                ],
+                          ],
+                        )),
+                    Container(
+                        padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.width * 0.25),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Theme(
+                                data: Theme.of(context).copyWith(
+                                  unselectedWidgetColor: Colors.white,
+                                ),
+                                child: new Transform.scale(
+                                  scale: 1.4,
+                                  child: Checkbox(
+                                      checkColor: Colors.white,
+                                      activeColor: Colors.blue[500],
+                                      value: envasado,
+                                      onChanged: (value) {
+                                        envasado = value;
+                                        setState(() {
+                                          args['type']['tipooperacion'] =
+                                              'envasado';
+                                          //print('este es envasado :$envasado');
+                                          if (granel) {
+                                            granel = false;
+                                          }
+                                        });
+                                      }),
+                                )),
+                            Text(
+                              'ENVASADO ',
+                              style: GoogleFonts.openSans(
+                                color: Colors.white,
+                                fontSize: 30,
+                              ),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
               ),
-            ),
-          ),
+              message: Container()),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: help.botonera(context, () {

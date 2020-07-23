@@ -180,7 +180,8 @@ class _StatusPageState extends State<StatusPage> {
                           ))
                     ],
                   ),
-                )),
+                ),
+                message: Container()),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,

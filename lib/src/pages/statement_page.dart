@@ -120,7 +120,6 @@ class _StatementState extends State<Statement> {
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 10)),
@@ -130,17 +129,15 @@ class _StatementState extends State<Statement> {
                                   fontSize: 20,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 5)),
                               Text(
-                                '1)	Me comprometo a usar el presente aplicativo.',
+                                '1)	Me comprometo a usar el presente aplicativo.                        ',
                                 style: GoogleFonts.roboto(
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2)),
@@ -150,7 +147,6 @@ class _StatementState extends State<Statement> {
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2)),
@@ -160,17 +156,15 @@ class _StatementState extends State<Statement> {
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 2)),
                               Text(
-                                '4)	El uso del aplicativo es estrictamente personal.',
+                                '4)	El uso del aplicativo es estrictamente personal.                             ',
                                 style: GoogleFonts.roboto(
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                               Padding(
                                   padding: EdgeInsets.symmetric(vertical: 5)),
@@ -180,14 +174,17 @@ class _StatementState extends State<Statement> {
                                   fontSize: 16,
                                   color: Colors.white,
                                 ),
-                                textAlign: TextAlign.justify,
                               ),
                             ],
                           )),
                     ),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 10)),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        Text('Acepta todos los terminos y condiciones',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13)),
                         Theme(
                           data: Theme.of(context).copyWith(
                             unselectedWidgetColor: Colors.white,
@@ -203,14 +200,14 @@ class _StatementState extends State<Statement> {
                             },
                           ),
                         ),
-                        Text('Acepta todos los terminos y condiciones',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 13)),
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        Text('Se enviara toda la información',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13)),
                         Theme(
                           data: Theme.of(context).copyWith(
                             unselectedWidgetColor: Colors.white,
@@ -226,9 +223,6 @@ class _StatementState extends State<Statement> {
                             },
                           ),
                         ),
-                        Text('Se enviara toda la información',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 13)),
                       ],
                     ),
                     SizedBox(
@@ -237,7 +231,8 @@ class _StatementState extends State<Statement> {
                   ],
                 ),
               ),
-            )),
+            ),
+            message: Container()),
       ),
     );
   }

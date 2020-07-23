@@ -214,7 +214,8 @@ class GamePageState extends State<GamePage> {
                   ),
                 ],
               ),
-            )),
+            ),
+            message: Container()),
       ),
     );
   }

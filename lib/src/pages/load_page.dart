@@ -94,7 +94,8 @@ class _LoadPageState extends State<LoadPage> {
                       ],
                     )),
                   ],
-                ))),
+                )),
+            message: Container()),
       ),
     );
   } //

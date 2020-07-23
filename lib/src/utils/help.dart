@@ -87,7 +87,7 @@ class Help {
 
   //diseño del fondo
   Stack layoutFondo(BuildContext context, Widget newWidget,
-      {floatTwo: Widget}) {
+      {Widget message, floatTwo: Widget}) {
     return Stack(
       children: <Widget>[
         Container(
@@ -148,6 +148,7 @@ class Help {
           ),
         ),*/
         newWidget,
+        message,
       ],
     );
   }
