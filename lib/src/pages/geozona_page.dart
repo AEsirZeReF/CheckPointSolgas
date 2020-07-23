@@ -109,21 +109,34 @@ class _GeozonaState extends State<Geozona> {
             opacity: _visible ? 1.0 : 0.0,
             child: RaisedButton(
                 onPressed: () async {
+                  var resformat;
                   try {
                     var res = await http.get(
                         'http://190.223.43.132:8000/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
+                    print('  ');
+                    print(res.body);
+                    resformat = json.decode(res.body);
+                    print('->>> format ${resformat['status']}');
+
                     if (res.statusCode == 200) {
-                      var resformat = json.decode(res.body);
-                      setState(() {
-                        args['geozona']['name'] =
-                            resformat['checkpoint']['name'];
-                      });
-                      _checkValido();
+                      if (resformat['status'] == false) {
+                        _checkNOValido(
+                            text: "Estas fuera del punto de control",
+                            image: 'perdido.png');
+                        print("estas fuera de la geozona");
+                      } else {
+                        setState(() {
+                          args['geozona']['name'] =
+                              resformat['checkpoint']['name'];
+                        });
+                        _checkValido(resformat['checkpoint']['name']);
+                      }
                     } else {
-                      _checkNOValido();
+                      _checkNOValido(
+                          text: "Hubo un problema con la conexión al servidor");
                     }
                   } catch (e) {
-                    print(e);
+                    print('->> fallo de conexion: $e');
                     _checkNOValido();
                   }
                 },
@@ -148,7 +161,7 @@ class _GeozonaState extends State<Geozona> {
     );
   }
 
-  _checkValido() {
+  _checkValido(String text) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -169,8 +182,18 @@ class _GeozonaState extends State<Geozona> {
                   children: <Widget>[
                     Text(
                       'POSICIÓN CORRECTAMENTE VALIDADA',
-                      style: GoogleFonts.roboto(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.openSans(
+                          fontSize: 22, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      text,
+                      style: GoogleFonts.openSans(
+                        fontSize: 20,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -195,34 +218,43 @@ class _GeozonaState extends State<Geozona> {
             ));
   }
 
-  _checkNOValido() {
+  _checkNOValido(
+      {String text = "Hubo un problema con la conexión a internet",
+      String image = "lost.jpg"}) {
     showDialog(
         context: context,
         barrierDismissible: true,
         builder: (_) => WillPopScope(
               onWillPop: () async => true,
               child: AlertDialog(
-                /*title: Container(
+                title: Container(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(2),
                           topRight: Radius.circular(2)),
-                      child: Image.asset('assets/images/disconnect.jpg')),
-                ),*/
+                      child: Image.asset('assets/images/$image')),
+                ),
                 content: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
-                      'Hubo un problema con la conexión',
-                      style: GoogleFonts.roboto(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
+                    Padding(
+                      padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height) *
+                          0.02,
+                      child: Text(
+                        text,
+                        style: GoogleFonts.openSans(fontSize: 22),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     RaisedButton(
                         color: Colors.lightGreen,
-                        child: Text('REINTENTAR'),
+                        child: Text(
+                          'REINTENTAR',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         })
