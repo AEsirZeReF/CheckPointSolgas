@@ -412,7 +412,7 @@ class GamePageState extends State<GamePage> {
           args['temporizador']['tiempo']
     });
     try {
-      String urlJ = 'http://190.223.43.132:8000/upload/';
+      String urlJ = 'http://checkpoint.segursat.com:8080/upload/';
       var url = urlJ;
       var response = await dio.post(url, data: formData);
       //print('Response status ${response.statusCode}');

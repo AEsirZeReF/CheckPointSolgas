@@ -300,7 +300,7 @@ class _ScannerPageState extends State<ScannerPage> {
   Future _getConductor() async {
     try {
       return await http.get(
-          'http://190.223.43.132:8000/control/web/api/get-driver/$_conductor');
+          'http://checkpoint.segursat.com:8080/control/web/api/get-driver/$_conductor');
     } catch (e) {
       print(e);
       return null;
@@ -309,8 +309,8 @@ class _ScannerPageState extends State<ScannerPage> {
 
   Future<http.Response> _getUnidad() async {
     try {
-      return await http
-          .get('http://190.223.43.132:8000/control/web/api/get-unit/$_unidad');
+      return await http.get(
+          'http://checkpoint.segursat.com:8080/control/web/api/get-unit/$_unidad');
     } catch (e) {
       print(e);
       return null;

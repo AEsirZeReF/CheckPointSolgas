@@ -112,7 +112,7 @@ class _GeozonaState extends State<Geozona> {
                   var resformat;
                   try {
                     var res = await http.get(
-                        'http://190.223.43.132:8000/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
+                        'http://checkpoint.segursat.com:8080/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
                     print('  ');
                     print(res.body);
                     resformat = json.decode(res.body);
