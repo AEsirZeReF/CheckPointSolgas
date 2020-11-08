@@ -21,7 +21,8 @@ dependencies:
     sdk: flutter
   flutter_map: any
   flutter_map_marker_cluster: any
-  geolocator: ^5.1.3
+  geolocator: any
+  # geolocator: ^5.1.3
   barcode_scan: any
   # barcode_scan: ^1.0.0
   # responsive: ^0.2.3+4

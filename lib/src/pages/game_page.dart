@@ -451,7 +451,7 @@ class GamePageState extends State<GamePage> {
                   ),
                   content: RaisedButton(
                       onPressed: () {
-                        print(args['temporizador']['tiempo']);
+                        print(args);
                         SystemChannels.platform
                             .invokeMethod('SystemNavigator.pop');
                         // Navigator.pushNamed(context, '/');

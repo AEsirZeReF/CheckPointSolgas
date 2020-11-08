@@ -249,6 +249,8 @@ class _StatementState extends State<Statement> {
       latitud = getPosition.latitude;
       longitud = getPosition.longitude;
     });
+    print(latitud);
+    print(longitud);
   }
 
   _checkConnection() async {

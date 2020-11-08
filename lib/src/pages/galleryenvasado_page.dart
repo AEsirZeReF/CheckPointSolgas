@@ -344,6 +344,7 @@ class _GalleryEnvasadoPageState extends State<GalleryEnvasadoPage> {
                                     color: Colors.white))),
                         RaisedButton(
                           onPressed: () {
+                            print(args);
                             Navigator.pushNamed(context, '/game',
                                 arguments: args);
                           },

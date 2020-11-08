@@ -113,10 +113,10 @@ class _GeozonaState extends State<Geozona> {
                   try {
                     var res = await http.get(
                         'http://checkpoint.segursat.com:8080/control/web/api/check-if-the-driver-is-inside-the-control-zone/${getPosition.latitude}/${getPosition.longitude}/');
-                    print('  ');
-                    print(res.body);
+                    //print('  ');
+                    //print(res.body);
                     resformat = json.decode(res.body);
-                    print('->>> format ${resformat['status']}');
+                    //print('->>> format ${resformat['status']}');
 
                     if (res.statusCode == 200) {
                       if (resformat['status'] == false) {
@@ -209,6 +209,7 @@ class _GeozonaState extends State<Geozona> {
                               color: Colors.white),
                         ),
                         onPressed: () {
+                          //print(args);
                           Navigator.pushNamed(context, '/status',
                               arguments: args);
                         })
